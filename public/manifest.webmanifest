@@ -1,0 +1,12 @@
+{
+  "name": "Campus OS - Central Institute of Technology",
+  "short_name": "Campus OS",
+  "description": "AI-native, offline-first digital campus operating system.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F9FB",
+  "theme_color": "#14213D",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, ArrowUp, Wrench, Loader2 } from "lucide-react";
+import { Sparkles, ArrowUp, Wrench } from "lucide-react";
 import { apiPost } from "@/lib/client/api";
 import { useNetworkMode } from "@/lib/client/network";
 import type { AssistantMessage, ChatMessage } from "@/lib/ai/types";
@@ -111,14 +111,7 @@ export function ChatPanel({ suggestedPrompts, poweredBy }: { suggestedPrompts: s
             <MessageBubble key={msg.id} message={msg} onAction={handleAction} />
           ))}
 
-          {sending && (
-            <div className="flex items-center gap-2.5 pl-1 text-xs text-muted-foreground">
-              <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Loader2 className="size-3 animate-spin" />
-              </div>
-              Thinking...
-            </div>
-          )}
+          {sending && <ThinkingIndicator />}
           <div ref={bottomRef} />
         </div>
       </div>
@@ -156,6 +149,22 @@ export function ChatPanel({ suggestedPrompts, poweredBy }: { suggestedPrompts: s
   );
 }
 
+function ThinkingIndicator() {
+  return (
+    <div className="flex items-start gap-2.5 duration-300 animate-in fade-in slide-in-from-bottom-1">
+      <div className="relative mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <span className="absolute inset-0 rounded-full bg-primary/50 animate-ping" />
+        <Sparkles className="relative size-3" />
+      </div>
+      <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-secondary px-4 py-3">
+        <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.3s]" />
+        <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.15s]" />
+        <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce" />
+      </div>
+    </div>
+  );
+}
+
 function MessageBubble({
   message,
   onAction,
@@ -165,14 +174,14 @@ function MessageBubble({
 }) {
   if (message.role === "user") {
     return (
-      <div className="flex justify-end">
+      <div className="flex justify-end duration-300 animate-in fade-in slide-in-from-bottom-1">
         <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-primary px-4 py-2 text-sm text-primary-foreground">{message.text}</div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-start gap-2.5">
+    <div className="flex items-start gap-2.5 duration-300 animate-in fade-in slide-in-from-bottom-1">
       <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <Sparkles className="size-3" />
       </div>

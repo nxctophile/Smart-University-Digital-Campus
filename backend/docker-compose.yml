@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: campus
       POSTGRES_PASSWORD: campus
@@ -17,6 +18,7 @@ services:
 
   backend:
     build: .
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgres://campus:campus@postgres:5432/campus
       PORT: 4000

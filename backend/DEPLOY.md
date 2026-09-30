@@ -17,11 +17,28 @@ another cloud, or a college's own server room.
    Postgres 16 container next to it, and runs migrations automatically on
    first boot (see `src/main.rs`).
 5. Confirm it's up: `curl http://localhost:4000/healthz`
-6. One-time: seed demo data by running the migration script from the repo
-   root against this backend's database - see the root README's "Demo
-   data" section, or point `DATABASE_URL` at this container's Postgres
-   (`postgres://campus:campus@<host>:5432/campus`) and run
-   `npm run migrate-demo-data`.
+6. One-time: seed demo data. `npm run migrate-demo-data` (repo root, with
+   `DATABASE_URL` pointed at this Postgres) is the intended path, but it
+   depends on `better-sqlite3`'s native binding - on a from-scratch box
+   this needs `sudo dnf groupinstall -y 'Development Tools'` (or the
+   Debian/Ubuntu equivalent) first so it can compile, and on at least one
+   Amazon Linux 2023 EC2 instance it compiled fine but **segfaulted at
+   runtime** for reasons not yet root-caused. If that happens, fall back to
+   a plain `sqlite3`/`psql` pipeline instead (no Node native module
+   involved) - for each table, in FK-safe order (see `TABLES_IN_ORDER` in
+   `scripts/migrate-sqlite-to-postgres.ts`):
+   ```
+   printf '.mode csv\n.headers on\nselect * from <table>;\n' | sqlite3 data/campus.db | tr -d '\r' > /tmp/<table>.csv
+   sed -i 's/""//g' /tmp/<table>.csv   # sqlite3's CSV mode always renders NULL as "", ignoring .nullvalue
+   cols=$(head -1 /tmp/<table>.csv)     # explicit column list - don't rely on positional order matching
+   psql "$DATABASE_URL" -c "\copy <table> ($cols) from '/tmp/<table>.csv' with (format csv, header true, null '')"
+   psql "$DATABASE_URL" -c "select setval(pg_get_serial_sequence('<table>','id'), (select coalesce(max(id),1) from <table>));"
+   ```
+   Note `students` and any other table the portal-features migration
+   (`0002_portal_features.sql`) added columns to will have a CSV header
+   that's a strict subset of the Postgres table's columns - the explicit
+   column list handles that automatically (Postgres fills the rest with
+   their defaults).
 7. On Vercel, set the Next.js project's `BACKEND_URL` env var to
    `http://<ec2-public-ip>:4000` (or put a reverse proxy / load balancer
    with TLS in front of it and point at that instead - recommended for

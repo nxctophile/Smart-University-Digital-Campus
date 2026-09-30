@@ -17,3 +17,4 @@ export default async function HomePage() {
   // layer transparently resolves "my data" vs. "my child's data".
   return <StudentDashboard />;
 }
+

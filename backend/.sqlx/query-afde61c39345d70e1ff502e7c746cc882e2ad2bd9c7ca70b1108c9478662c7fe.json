@@ -1,0 +1,56 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from transport_routes",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "university_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "vehicle_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "driver_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "capacity",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "afde61c39345d70e1ff502e7c746cc882e2ad2bd9c7ca70b1108c9478662c7fe"
+}

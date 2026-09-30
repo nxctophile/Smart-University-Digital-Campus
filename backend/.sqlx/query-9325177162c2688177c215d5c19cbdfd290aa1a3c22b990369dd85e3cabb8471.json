@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select bl.id, b.title, b.author, b.category, bl.borrowed_at, bl.due_at, bl.returned_at, bl.status, bl.fine_amount, bl.fine_paid\n        from book_loans bl join books b on b.id = bl.book_id\n        where bl.student_id = $1\n        order by bl.borrowed_at\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "author",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "borrowed_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "due_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "returned_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "fine_amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 9,
+        "name": "fine_paid",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "9325177162c2688177c215d5c19cbdfd290aa1a3c22b990369dd85e3cabb8471"
+}

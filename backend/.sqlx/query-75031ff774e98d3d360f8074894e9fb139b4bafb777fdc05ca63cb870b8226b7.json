@@ -1,0 +1,30 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into exam_form_submissions (window_id, student_id, course_ids) values ($1, $2, $3)\n           on conflict (window_id, student_id) do update set submitted_at = now(), course_ids = excluded.course_ids\n           returning id, submitted_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "submitted_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Jsonb"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "75031ff774e98d3d360f8074894e9fb139b4bafb777fdc05ca63cb870b8226b7"
+}

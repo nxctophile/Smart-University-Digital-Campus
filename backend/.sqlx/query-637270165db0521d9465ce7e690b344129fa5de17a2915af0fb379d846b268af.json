@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select distinct on (c.id)\n          c.id as course_id, c.code as course_code, c.name as course_name, c.semester,\n          e.name as exam_name, e.date, er.marks_obtained, e.max_marks\n        from exam_results er\n        join exams e on e.id = er.exam_id\n        join courses c on c.id = e.course_id\n        where er.student_id = $1 and er.graded = true\n        order by c.id, e.date desc\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "exam_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "marks_obtained",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 7,
+        "name": "max_marks",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "637270165db0521d9465ce7e690b344129fa5de17a2915af0fb379d846b268af"
+}

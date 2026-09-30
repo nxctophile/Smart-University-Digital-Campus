@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from student_documents where id = $1 and student_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f88c9d9a541dbcd5a7f6159414fb20f13a34287c72220cb010f60d9c0697ed07"
+}

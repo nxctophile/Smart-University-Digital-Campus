@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update exam_results set marks_obtained = $1, graded = false where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Float8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1230461f4ecd6e5c2caf3d446b315daade83fcb7f0b66d246b515cc3f15ca680"
+}

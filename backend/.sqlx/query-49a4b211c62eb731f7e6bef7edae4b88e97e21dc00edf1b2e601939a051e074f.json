@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select r.id as route_id, r.name as route_name, r.code as route_code, r.vehicle_number, r.driver_name,\n               s.id as stop_id, s.name as stop_name, s.arrival_time\n        from transport_assignments ta\n        join transport_routes r on r.id = ta.route_id\n        join transport_stops s on s.id = ta.stop_id\n        where ta.student_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "route_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "route_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "route_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "vehicle_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "driver_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "stop_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "stop_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "arrival_time",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "49a4b211c62eb731f7e6bef7edae4b88e97e21dc00edf1b2e601939a051e074f"
+}

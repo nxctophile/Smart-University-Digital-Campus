@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into exam_results (exam_id, student_id, marks_obtained, graded) values ($1, $2, $3, false)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Float8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "6b06fc2243d65307c257491060b3b4149b85d7d69d5f2e8c47c40e242036a660"
+}

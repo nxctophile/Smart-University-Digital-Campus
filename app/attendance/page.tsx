@@ -5,9 +5,7 @@ import { useApiGet } from "@/lib/client/use-api";
 import { PageHeader } from "@/components/common/page-header";
 import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-blocks";
 import { CalendarCheck } from "lucide-react";
-import type { getAttendanceSummary } from "@/lib/services/attendance";
-
-type Summary = Awaited<ReturnType<typeof getAttendanceSummary>>;
+import type { AttendanceSummary as Summary } from "@/lib/api-types";
 
 function barColor(pct: number) {
   if (pct < 75) return "var(--color-destructive)";

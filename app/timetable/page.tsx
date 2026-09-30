@@ -6,9 +6,7 @@ import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-
 import { CalendarDays } from "lucide-react";
 import { DAY_NAMES } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import type { getStudentTimetable } from "@/lib/services/timetable";
-
-type Slot = Awaited<ReturnType<typeof getStudentTimetable>>[number];
+import type { TimetableSlot as Slot } from "@/lib/api-types";
 
 const GRID_START_MIN = 8 * 60;
 const GRID_END_MIN = 17 * 60;

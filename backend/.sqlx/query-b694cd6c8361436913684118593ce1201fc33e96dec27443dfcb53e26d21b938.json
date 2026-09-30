@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update students set email_verified = true where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b694cd6c8361436913684118593ce1201fc33e96dec27443dfcb53e26d21b938"
+}

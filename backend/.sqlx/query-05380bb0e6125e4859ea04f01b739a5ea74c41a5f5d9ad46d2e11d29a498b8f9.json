@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update book_loans set status = 'returned', returned_at = $1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "05380bb0e6125e4859ea04f01b739a5ea74c41a5f5d9ad46d2e11d29a498b8f9"
+}

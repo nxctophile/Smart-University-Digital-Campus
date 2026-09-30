@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getCurrentContext } from "@/lib/demo-session";
+import { getCurrentClientContext as getCurrentContext } from "@/lib/server-context";
 import { ChatPanel } from "@/components/ai/chat-panel";
 
 const PROMPTS: Record<string, string[]> = {

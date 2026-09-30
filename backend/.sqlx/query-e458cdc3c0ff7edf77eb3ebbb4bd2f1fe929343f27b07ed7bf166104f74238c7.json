@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select student_id, kind, status from exam_review_applications where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "kind",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "status",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e458cdc3c0ff7edf77eb3ebbb4bd2f1fe929343f27b07ed7bf166104f74238c7"
+}

@@ -1,0 +1,54 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select s.id as student_id, s.roll_number, s.first_name, s.last_name, er.marks_obtained, er.graded\n        from students s\n        left join exam_results er on er.student_id = s.id and er.exam_id = $1\n        where s.programme_id = $2 and s.current_semester = $3\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "marks_obtained",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 5,
+        "name": "graded",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0df6b5e276c5dd9c253bb51dbb388aebea5b9f9476c76cbf2c526a2e8f1d4a5a"
+}

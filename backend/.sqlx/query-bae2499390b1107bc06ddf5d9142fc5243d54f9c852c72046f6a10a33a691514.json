@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select rp.permission_key, ur.scope\n        from user_roles ur\n        join roles r on r.id = ur.role_id\n        join role_permissions rp on rp.role_id = r.id\n        where ur.user_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "permission_key",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "scope",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "bae2499390b1107bc06ddf5d9142fc5243d54f9c852c72046f6a10a33a691514"
+}

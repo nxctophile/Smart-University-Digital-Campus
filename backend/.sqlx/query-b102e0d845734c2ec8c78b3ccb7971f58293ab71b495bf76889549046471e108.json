@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select f.id, f.student_id, s.roll_number, s.first_name, s.last_name, f.fee_type, f.amount, f.amount_paid, f.due_date, f.status\n        from fees f join students s on s.id = f.student_id\n        where $1::text is null or f.status = $1\n        order by f.due_date desc\n        limit 100\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "fee_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 7,
+        "name": "amount_paid",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 8,
+        "name": "due_date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "status",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b102e0d845734c2ec8c78b3ccb7971f58293ab71b495bf76889549046471e108"
+}

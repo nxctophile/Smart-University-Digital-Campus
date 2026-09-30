@@ -1,0 +1,38 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select d.code, d.name, count(*) as \"students!\",\n               avg(case when a.total > 0 then a.present * 100.0 / a.total else null end)::float8 as avg_attendance\n        from students s\n        join departments d on d.id = s.department_id\n        left join (\n          select student_id, count(*) total, sum(case when status in ('present','excused') then 1 else 0 end) present\n          from attendance group by student_id\n        ) a on a.student_id = s.id\n        where s.status = 'active'\n        group by d.id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "students!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "avg_attendance",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "6e68e95fbe235b0dcd27e6f5b3e6418ec3a678a7cb5baa83ec287b193127d370"
+}

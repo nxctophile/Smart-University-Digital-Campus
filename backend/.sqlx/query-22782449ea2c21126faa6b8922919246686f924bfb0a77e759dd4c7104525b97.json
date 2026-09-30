@@ -1,0 +1,32 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select category, count(*) as \"titles!\", coalesce(sum(total_copies),0) as \"copies!\" from books group by category order by 3 desc",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "titles!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "copies!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "22782449ea2c21126faa6b8922919246686f924bfb0a77e759dd4c7104525b97"
+}

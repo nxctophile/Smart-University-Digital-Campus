@@ -21,9 +21,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import type { listDocuments, CertificateType } from "@/lib/services/documents";
+import type { DocsData, CertificateType } from "@/lib/api-types";
 
-type DocsData = Awaited<ReturnType<typeof listDocuments>>;
 type Certificate = DocsData["certificates"][number];
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {

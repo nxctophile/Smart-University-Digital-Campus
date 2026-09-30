@@ -2,27 +2,14 @@
  * AI tool layer.
  *
  * The AI never touches the database directly. Every tool below is a thin,
- * typed wrapper around the application/service layer (lib/services/*), so
- * the same authorization rules that protect the REST API also protect the
- * AI. `parameters` is a JSON-Schema fragment in OpenAI/Groq function-calling
- * shape - it's what lets a real LLM (see lib/ai/groq-provider.ts) select a
- * tool and fill in arguments; the deterministic RuleBasedProvider ignores it
- * and fills args itself.
+ * typed wrapper around the Rust backend's REST API, called with the caller's
+ * own session cookie - so the same authorization the backend enforces for
+ * every other client protects the AI too. `parameters` is a JSON-Schema
+ * fragment in OpenAI/Groq function-calling shape - it's what lets a real LLM
+ * (see lib/ai/groq-provider.ts) select a tool and fill in arguments; the
+ * deterministic RuleBasedProvider ignores it and fills args itself.
  */
-import { AccessContext } from "@/lib/services/context";
-import * as studentsSvc from "@/lib/services/students";
-import * as attendanceSvc from "@/lib/services/attendance";
-import * as timetableSvc from "@/lib/services/timetable";
-import * as feesSvc from "@/lib/services/fees";
-import * as examsSvc from "@/lib/services/exams";
-import * as documentsSvc from "@/lib/services/documents";
-import * as helpdeskSvc from "@/lib/services/helpdesk";
-import * as hostelSvc from "@/lib/services/hostel";
-import * as transportSvc from "@/lib/services/transport";
-import * as riskSvc from "@/lib/services/risk";
-import * as adminSvc from "@/lib/services/admin";
-import * as librarySvc from "@/lib/services/library";
-import * as scholarshipSvc from "@/lib/services/scholarships";
+import { backendFetch, Caller } from "./backend";
 
 export type JSONSchema = {
   type: "object";
@@ -36,41 +23,56 @@ export type ToolDefinition = {
    * gets a confirm button instead, same as the rule-based provider. */
   sensitive?: boolean;
   parameters: JSONSchema;
-  run: (ctx: AccessContext, args: Record<string, unknown>) => Promise<unknown>;
+  run: (caller: Caller, args: Record<string, unknown>) => Promise<unknown>;
 };
 
 const EMPTY_SCHEMA: JSONSchema = { type: "object", properties: {} };
+
+function qs(params: Record<string, unknown>): string {
+  const usp = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null || value === "") continue;
+    if (Array.isArray(value)) value.forEach((v) => usp.append(key, String(v)));
+    else usp.set(key, String(value));
+  }
+  const query = usp.toString();
+  return query ? `?${query}` : "";
+}
+
+function post(caller: Caller, path: string, body: unknown) {
+  return backendFetch(caller.cookie, path, { method: "POST", body: JSON.stringify(body) });
+}
 
 export const tools: Record<string, ToolDefinition> = {
   get_student_profile: {
     description: "Fetch a student's identity, programme and enrollment details.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => studentsSvc.getStudentProfile(ctx, args.studentId as number | undefined),
+    run: async (caller) => (await backendFetch<{ profile: unknown }>(caller.cookie, "/api/profile")).profile,
   },
   get_attendance: {
     description: "Fetch a student's attendance broken down by course.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => attendanceSvc.getAttendanceSummary(ctx, args.studentId as number | undefined),
+    run: (caller, args) => backendFetch(caller.cookie, `/api/attendance${qs({ studentId: args.studentId })}`),
   },
   get_timetable: {
     description: "Fetch a student's weekly class timetable.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => timetableSvc.getStudentTimetable(ctx, args.studentId as number | undefined),
+    run: async (caller) => (await backendFetch<{ timetable: unknown }>(caller.cookie, "/api/timetable")).timetable,
   },
   get_fee_status: {
     description: "Fetch a student's fee balance and payment status.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => feesSvc.getFeeStatus(ctx, args.studentId as number | undefined),
+    run: (caller) => backendFetch(caller.cookie, "/api/fees"),
   },
   get_exam_schedule: {
     description: "Fetch a student's upcoming exam schedule.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => examsSvc.getExamSchedule(ctx, args.studentId as number | undefined),
+    run: async (caller) => (await backendFetch<{ exams: unknown }>(caller.cookie, "/api/exams")).exams,
   },
   search_documents: {
     description: "List a student's available documents and issued certificates.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => documentsSvc.listDocuments(ctx, args.studentId as number | undefined),
+    run: (caller) => backendFetch(caller.cookie, "/api/documents"),
   },
   request_certificate: {
     description: "Verify eligibility and generate a certificate for a student.",
@@ -81,14 +83,7 @@ export const tools: Record<string, ToolDefinition> = {
         purpose: { type: "string", description: "Why the student needs this certificate" },
       },
     },
-    run: (ctx, args) =>
-      documentsSvc.requestCertificate(
-        ctx,
-        args.studentId as number | undefined,
-        (args.type as documentsSvc.CertificateType) ?? "bonafide",
-        (args.purpose as string) ?? "General purpose",
-        "ai",
-      ),
+    run: (caller, args) => post(caller, "/api/certificates", { type: args.type ?? "bonafide", purpose: args.purpose ?? "General purpose" }),
   },
   create_helpdesk_ticket: {
     description: "File a helpdesk ticket on behalf of a student. Always confirm with the user before calling this.",
@@ -102,27 +97,18 @@ export const tools: Record<string, ToolDefinition> = {
       },
       required: ["category", "subject", "description"],
     },
-    run: (ctx, args) =>
-      helpdeskSvc.createTicket(
-        ctx,
-        args.studentId as number | undefined,
-        {
-          category: args.category as helpdeskSvc.TicketCategory,
-          subject: args.subject as string,
-          description: args.description as string,
-        },
-        "ai",
-      ),
+    run: async (caller, args) =>
+      (await post(caller, "/api/helpdesk/tickets", { category: args.category, subject: args.subject, description: args.description }) as { ticket: unknown }).ticket,
   },
   get_transport_status: {
     description: "Fetch a student's assigned transport route and stop.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => transportSvc.getTransportInfo(ctx, args.studentId as number | undefined),
+    run: async (caller) => (await backendFetch<{ info: unknown }>(caller.cookie, "/api/transport")).info,
   },
   get_hostel_information: {
     description: "Fetch a student's hostel block and room assignment.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx, args) => hostelSvc.getHostelInfo(ctx, args.studentId as number | undefined),
+    run: async (caller) => (await backendFetch<{ info: unknown }>(caller.cookie, "/api/hostel")).info,
   },
   get_student_performance: {
     description: "Fetch a student's combined attendance + academic risk profile.",
@@ -130,7 +116,7 @@ export const tools: Record<string, ToolDefinition> = {
       type: "object",
       properties: { studentId: { type: "number", description: "Student id (required for faculty/admin callers)" } },
     },
-    run: (ctx, args) => riskSvc.getStudentRiskForCaller(ctx, args.studentId as number | undefined),
+    run: async (caller, args) => (await backendFetch<{ risk: unknown }>(caller.cookie, `/api/academics/performance${qs({ studentId: args.studentId })}`)).risk,
   },
   search_students: {
     description: "Search the student directory by name/roll number/department (admin/faculty only).",
@@ -141,7 +127,8 @@ export const tools: Record<string, ToolDefinition> = {
         departmentCode: { type: "string", description: "e.g. CSE, ECE, ME, CE, MGMT" },
       },
     },
-    run: (ctx, args) => studentsSvc.searchStudents(ctx, args as studentsSvc.StudentSearchFilters),
+    run: async (caller, args) =>
+      (await backendFetch<{ students: unknown }>(caller.cookie, `/api/admin/students${qs({ query: args.query, department: args.departmentCode })}`)).students,
   },
   get_at_risk_students: {
     description:
@@ -156,7 +143,20 @@ export const tools: Record<string, ToolDefinition> = {
         query: { type: "string", description: "Name or roll number substring" },
       },
     },
-    run: (ctx, args) => riskSvc.getAtRiskStudents(ctx, args as riskSvc.AtRiskFilters),
+    run: async (caller, args) =>
+      (
+        await backendFetch<{ students: unknown }>(
+          caller.cookie,
+          `/api/admin/at-risk${qs({
+            maxAttendance: args.maxAttendance,
+            riskLevel: args.riskLevel,
+            department: args.departmentCode,
+            examWithinDays: args.examWithinDays,
+            query: args.query,
+            limit: args.limit,
+          })}`,
+        )
+      ).students,
   },
   notify_students: {
     description: "Send an attendance/academic alert to a set of students or their parents (admin/faculty only). Always confirm before calling.",
@@ -170,13 +170,12 @@ export const tools: Record<string, ToolDefinition> = {
       },
       required: ["studentIds", "channel", "message"],
     },
-    run: (ctx, args) =>
-      adminSvc.notifyStudents(ctx, args.studentIds as number[], (args.channel as "student" | "parent") ?? "student", args.message as string),
+    run: (caller, args) => post(caller, "/api/admin/notify", { studentIds: args.studentIds, channel: args.channel ?? "student", message: args.message }),
   },
   get_library_status: {
     description: "Fetch a student's currently borrowed library books, due dates and any fines.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx) => librarySvc.getMyLoans(ctx),
+    run: (caller) => backendFetch(caller.cookie, "/api/library/loans"),
   },
   search_library_catalog: {
     description: "Search the library catalog by title, author, or category.",
@@ -184,12 +183,12 @@ export const tools: Record<string, ToolDefinition> = {
       type: "object",
       properties: { query: { type: "string", description: "Title, author, or category keyword" } },
     },
-    run: (ctx, args) => librarySvc.searchCatalog((args.query as string) ?? ""),
+    run: async (caller, args) => (await backendFetch<{ books: unknown }>(caller.cookie, `/api/library/catalog${qs({ query: args.query ?? "" })}`)).books,
   },
   get_scholarships: {
     description: "List scholarships a student is eligible to apply for, and the status of any applications already made.",
     parameters: EMPTY_SCHEMA,
-    run: (ctx) => scholarshipSvc.getStudentScholarshipView(ctx),
+    run: (caller) => backendFetch(caller.cookie, "/api/scholarships"),
   },
   apply_for_scholarship: {
     description: "Submit a scholarship application on the student's behalf. Always confirm before calling.",
@@ -199,7 +198,7 @@ export const tools: Record<string, ToolDefinition> = {
       properties: { scholarshipId: { type: "number", description: "Scholarship id from get_scholarships" } },
       required: ["scholarshipId"],
     },
-    run: (ctx, args) => scholarshipSvc.applyForScholarship(ctx, args.scholarshipId as number),
+    run: (caller, args) => post(caller, "/api/scholarships/apply", { scholarshipId: args.scholarshipId }),
   },
 };
 

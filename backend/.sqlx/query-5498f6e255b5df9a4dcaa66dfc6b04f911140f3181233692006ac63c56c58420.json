@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select course_id, programme_id, semester from exams where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "semester",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "5498f6e255b5df9a4dcaa66dfc6b04f911140f3181233692006ac63c56c58420"
+}

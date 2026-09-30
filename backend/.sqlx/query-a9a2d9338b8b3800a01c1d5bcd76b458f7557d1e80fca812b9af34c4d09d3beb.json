@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from notifications where audience_role is null or audience_role = $1 order by created_at desc limit 12",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "university_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "audience_role",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "message",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "read_at",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "a9a2d9338b8b3800a01c1d5bcd76b458f7557d1e80fca812b9af34c4d09d3beb"
+}

@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from certificates where student_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "requested_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "issued_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "verification_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "purpose",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "requested_via",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "1d939dd4ced6e8bbc734eebc2e1990aac89d6ff7a78bcfb9aa5aafa860afa673"
+}

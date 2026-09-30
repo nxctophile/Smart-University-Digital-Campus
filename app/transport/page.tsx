@@ -18,10 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import type { getTransportInfo, listRoutesWithStops } from "@/lib/services/transport";
-
-type TransportInfo = Awaited<ReturnType<typeof getTransportInfo>>;
-type RouteWithStops = Awaited<ReturnType<typeof listRoutesWithStops>>[number];
+import type { TransportInfo, RouteWithStops } from "@/lib/api-types";
 
 function ChangeRouteDialog({ open, onOpenChange, current, onSaved }: { open: boolean; onOpenChange: (v: boolean) => void; current: TransportInfo; onSaved: () => void }) {
   const [routes, setRoutes] = useState<RouteWithStops[] | null>(null);

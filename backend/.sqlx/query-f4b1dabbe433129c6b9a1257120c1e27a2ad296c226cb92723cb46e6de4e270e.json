@@ -1,0 +1,88 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from leave_applications where applicant_user_id = $1 order by applied_at desc",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "applicant_user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "applicant_role",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "leave_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "from_date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "to_date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "reason",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "applied_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "decided_by",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "remarks",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "f4b1dabbe433129c6b9a1257120c1e27a2ad296c226cb92723cb46e6de4e270e"
+}

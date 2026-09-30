@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select department_id from programmes where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "department_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4ba843f038ddf61b181a12ef1e4d6ed6711b94898581eefa44b85f870e4adb60"
+}

@@ -1,0 +1,86 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select la.id, la.applicant_user_id, la.applicant_role, la.leave_type, la.from_date, la.to_date, la.reason,\n               la.status, la.applied_at, la.decided_at, la.remarks, u.name as applicant_name\n        from leave_applications la\n        join users u on u.id = la.applicant_user_id\n        order by la.applied_at desc\n        limit 200\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "applicant_user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "applicant_role",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "leave_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "from_date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "to_date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "reason",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "applied_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "applicant_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "723b4f6c28c18c7226544c3a073933ecf4c42d93c17d0f813d41575506f5db61"
+}

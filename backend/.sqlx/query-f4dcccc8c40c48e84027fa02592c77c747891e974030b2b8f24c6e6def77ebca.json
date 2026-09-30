@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select department_id from faculty where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "department_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f4dcccc8c40c48e84027fa02592c77c747891e974030b2b8f24c6e6def77ebca"
+}

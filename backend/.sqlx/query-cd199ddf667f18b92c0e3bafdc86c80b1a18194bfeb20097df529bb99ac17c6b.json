@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into import_jobs (file_name, source_format, target_entity, status, column_mapping, row_count, imported_count)\n           values ($1, $2, 'students', 'mapped', $3, $4, 0)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "cd199ddf667f18b92c0e3bafdc86c80b1a18194bfeb20097df529bb99ac17c6b"
+}

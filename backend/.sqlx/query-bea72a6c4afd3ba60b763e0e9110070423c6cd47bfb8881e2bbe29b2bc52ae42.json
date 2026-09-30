@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from exams where course_id = $1 order by date",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "exam_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "start_time",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "duration_minutes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "max_marks",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "semester",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "bea72a6c4afd3ba60b763e0e9110070423c6cd47bfb8881e2bbe29b2bc52ae42"
+}

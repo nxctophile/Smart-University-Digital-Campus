@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Wallet, ShieldCheck, Loader2, CreditCard, RotateCcw } from "lucide-react";
+import { Wallet, ShieldCheck, Loader2, CreditCard, RotateCcw, Receipt, Printer } from "lucide-react";
 import { useApiGet } from "@/lib/client/use-api";
 import { apiPost } from "@/lib/client/api";
 import { openRazorpayCheckout } from "@/lib/client/razorpay";
@@ -12,10 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import type { getFeeStatus } from "@/lib/services/fees";
-
-type Fees = Awaited<ReturnType<typeof getFeeStatus>>;
-type FeeItem = Fees["items"][number];
+import { cn } from "@/lib/utils";
+import type { FeeStatus as Fees, FeeItem, PaymentReceipt } from "@/lib/api-types";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   paid: "secondary",
@@ -24,8 +22,38 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = 
 };
 
 type CreateOrderResult = { orderId: string; amount: number; currency: string; keyId: string | null; demoMode: boolean };
+type Tab = "balance" | "receipts";
 
 export default function FeesPage() {
+  const [tab, setTab] = useState<Tab>("balance");
+
+  return (
+    <div>
+      <PageHeader title="Fees" description="Semester fee balances, payments, and receipts." />
+      <div className="mb-6 flex gap-1 overflow-x-auto rounded-lg bg-muted p-0.5 text-xs">
+        {([
+          { key: "balance", label: "Fee Balance" },
+          { key: "receipts", label: "Receipts" },
+        ] as { key: Tab; label: string }[]).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={cn(
+              "flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition-colors",
+              tab === t.key ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      {tab === "balance" && <FeeBalanceTab />}
+      {tab === "receipts" && <ReceiptsTab />}
+    </div>
+  );
+}
+
+function FeeBalanceTab() {
   const { data, loading, error, reload } = useApiGet<Fees>("/api/fees");
   const [payingFeeId, setPayingFeeId] = useState<number | null>(null);
   const [demoOrder, setDemoOrder] = useState<{ fee: FeeItem; order: CreateOrderResult } | null>(null);
@@ -104,8 +132,6 @@ export default function FeesPage() {
 
   return (
     <div>
-      <PageHeader title="Fees" description="Semester fee balances and payment status." />
-
       {loading && <LoadingBlock rows={3} />}
       {error && <ErrorBlock message={error} onRetry={reload} />}
       {data && data.items.length === 0 && <EmptyState icon={Wallet} title="No fee records found" />}
@@ -205,6 +231,75 @@ export default function FeesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function ReceiptsTab() {
+  const { data, loading, error, reload } = useApiGet<{ payments: PaymentReceipt[] }>("/api/payments/history");
+  const [printing, setPrinting] = useState<PaymentReceipt | null>(null);
+
+  if (loading) return <LoadingBlock rows={3} />;
+  if (error) return <ErrorBlock message={error} onRetry={reload} />;
+  if (!data) return null;
+  if (data.payments.length === 0) return <EmptyState icon={Receipt} title="No payments on file yet" />;
+
+  return (
+    <div className="space-y-3">
+      {data.payments.map((p) => (
+        <div key={p.id} className="card-surface flex items-center justify-between gap-3 p-3.5 text-sm">
+          <div>
+            <p className="font-medium capitalize">
+              {p.feeType} fee · {p.academicYear} Sem {p.semester}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {new Date(p.paidAt).toLocaleDateString("en-IN")} · {p.method} · Ref {p.transactionRef}
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="font-medium">₹{p.amount.toLocaleString("en-IN")}</span>
+            <Button size="sm" variant="outline" onClick={() => setPrinting(p)} className="gap-1.5">
+              <Receipt className="size-3.5" /> Receipt
+            </Button>
+          </div>
+        </div>
+      ))}
+
+      <Dialog open={!!printing} onOpenChange={(open) => !open && setPrinting(null)}>
+        <DialogContent className="print:shadow-none">
+          <DialogHeader>
+            <DialogTitle>Payment Receipt</DialogTitle>
+            <DialogDescription>Central Institute of Technology</DialogDescription>
+          </DialogHeader>
+          {printing && (
+            <div className="space-y-2 rounded-lg border border-border p-4 text-sm">
+              <Row label="Receipt No." value={printing.transactionRef} />
+              <Row label="Date" value={new Date(printing.paidAt).toLocaleString("en-IN")} />
+              <Row label="Fee type" value={`${printing.feeType} (${printing.academicYear}, Sem ${printing.semester})`} />
+              <Row label="Payment method" value={printing.method} />
+              <Row label="Status" value={printing.status} />
+              <div className="mt-2 flex justify-between border-t border-border pt-2 text-base font-semibold">
+                <span>Amount paid</span>
+                <span>₹{printing.amount.toLocaleString("en-IN")}</span>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => window.print()} className="gap-1.5 print:hidden">
+              <Printer className="size-3.5" /> Print
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-muted-foreground capitalize">{label}</span>
+      <span className="font-medium capitalize">{value}</span>
     </div>
   );
 }

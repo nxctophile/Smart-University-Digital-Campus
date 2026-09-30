@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update profile_edit_requests set status = $1, decided_at = now(), decided_by = $2, remarks = $3 where id = $4",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int4",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1ef8a6e3a17249ebbf3436c73b8fd1a99ecea6b847e660bc45abfa5b2e664622"
+}

@@ -1,0 +1,75 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into certificates (student_id, type, status, requested_at, issued_at, verification_code, purpose, requested_via)\n           values ($1, $2, 'ready', $3, $3, $4, $5, $6) returning *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "requested_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "issued_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "verification_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "purpose",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "requested_via",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "c1fcb94c7a84f849ffc975b0f4e1b76fbb1e14ce9d115c00e88bcb2bcaf1db1d"
+}

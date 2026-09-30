@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update payments set status = 'paid', razorpay_payment_id = $1, razorpay_signature = $2, paid_at = $3, transaction_ref = $1 where id = $4",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4b7dcf07d4969f3bb6859e33e716b377678c1ee6afa5cf73d03cd4b6994468a1"
+}

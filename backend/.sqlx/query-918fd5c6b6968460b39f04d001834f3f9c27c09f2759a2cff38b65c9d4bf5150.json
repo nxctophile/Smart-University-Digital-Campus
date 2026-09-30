@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct programme_id, semester from exams\n           where date::date between current_date and (current_date + $1::int * interval '1 day')",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "semester",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "918fd5c6b6968460b39f04d001834f3f9c27c09f2759a2cff38b65c9d4bf5150"
+}

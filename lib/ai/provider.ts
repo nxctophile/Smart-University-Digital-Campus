@@ -9,9 +9,9 @@
  * what arguments, then hand the tool result back to the same response
  * formatter. Nothing else in the app needs to change.
  */
-import { AccessContext } from "@/lib/services/context";
+import { Caller } from "./backend";
 import { ChatMessage, AssistantMessage } from "./types";
 
 export interface AIProvider {
-  respond(ctx: AccessContext, message: string, history: ChatMessage[]): Promise<AssistantMessage>;
+  respond(caller: Caller, message: string, history: ChatMessage[]): Promise<AssistantMessage>;
 }

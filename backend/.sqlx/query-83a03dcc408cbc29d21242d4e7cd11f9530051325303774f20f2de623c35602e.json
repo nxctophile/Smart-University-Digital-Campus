@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select department_id from employees where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "department_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "83a03dcc408cbc29d21242d4e7cd11f9530051325303774f20f2de623c35602e"
+}

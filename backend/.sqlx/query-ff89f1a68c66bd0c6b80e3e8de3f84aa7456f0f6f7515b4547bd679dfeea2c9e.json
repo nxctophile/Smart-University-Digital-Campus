@@ -1,0 +1,68 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select f.id, f.employee_id, f.first_name, f.last_name, f.email, f.phone, f.designation, f.department_id, d.name as department_name\n           from faculty f join departments d on d.id = f.department_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "employee_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "phone",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "designation",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "department_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "department_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "ff89f1a68c66bd0c6b80e3e8de3f84aa7456f0f6f7515b4547bd679dfeea2c9e"
+}

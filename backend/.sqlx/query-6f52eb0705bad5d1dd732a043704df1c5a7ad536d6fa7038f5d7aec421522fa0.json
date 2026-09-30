@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select route_id from transport_stops where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "route_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6f52eb0705bad5d1dd732a043704df1c5a7ad536d6fa7038f5d7aec421522fa0"
+}

@@ -10,10 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useApiGet } from "@/lib/client/use-api";
 import { apiMutate } from "@/lib/client/api";
 import { toast } from "sonner";
-import type { getFinanceOverview, listFeeRecords } from "@/lib/services/fees";
-
-type Overview = Awaited<ReturnType<typeof getFinanceOverview>>;
-type FeeRecord = Awaited<ReturnType<typeof listFeeRecords>>[number];
+import type { FinanceOverview as Overview, FeeRecord } from "@/lib/api-types";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   paid: "secondary",

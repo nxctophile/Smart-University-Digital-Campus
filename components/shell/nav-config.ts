@@ -20,6 +20,11 @@ import {
   ShieldCheck,
   ClipboardCheck,
   Briefcase,
+  CreditCard,
+  Lock,
+  CalendarX2,
+  FileCheck2,
+  History,
 } from "lucide-react";
 import type { ClientContext } from "@/lib/types";
 
@@ -56,6 +61,11 @@ const GROUPS: NavGroup[] = [
       { label: "Hostel", href: "/hostel", icon: Building2, anyOf: ["hostel.view"] },
       { label: "Transport", href: "/transport", icon: Bus, anyOf: ["transport.view"] },
       { label: "Helpdesk", href: "/helpdesk", icon: LifeBuoy, anyOf: ["helpdesk.ticket.view", "helpdesk.ticket.create"] },
+      { label: "ID Card", href: "/id-card", icon: CreditCard, anyOf: ["profile.view"] },
+      { label: "Digital Locker", href: "/locker", icon: Lock, anyOf: ["documents.locker.manage"] },
+      { label: "Leave", href: "/leave", icon: CalendarX2, anyOf: ["leave.apply", "leave.manage"] },
+      { label: "Exam Services", href: "/exam-services", icon: FileCheck2, anyOf: ["exam.form.fill", "exam.review.apply", "exam.form.manage", "exam.review.manage"] },
+      { label: "My Records", href: "/reports", icon: History, anyOf: ["attendance.view", "marks.view"] },
     ],
     separatorAfter: true,
   },

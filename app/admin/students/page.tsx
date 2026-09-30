@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { apiGet, apiPost } from "@/lib/client/api";
 import { toast } from "sonner";
 import { Users } from "lucide-react";
-import type { StudentRisk } from "@/lib/services/risk";
+import type { StudentRisk } from "@/lib/api-types";
 
 const RISK_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   high: "destructive",

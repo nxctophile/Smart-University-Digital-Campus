@@ -4,9 +4,7 @@ import { Building2, User } from "lucide-react";
 import { useApiGet } from "@/lib/client/use-api";
 import { PageHeader } from "@/components/common/page-header";
 import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-blocks";
-import type { getHostelInfo } from "@/lib/services/hostel";
-
-type HostelInfo = Awaited<ReturnType<typeof getHostelInfo>>;
+import type { HostelInfo } from "@/lib/api-types";
 
 export default function HostelPage() {
   const { data, loading, error, reload } = useApiGet<{ info: HostelInfo }>("/api/hostel");

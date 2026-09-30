@@ -1,0 +1,68 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from import_jobs order by created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "file_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "source_format",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "target_entity",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "column_mapping",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "row_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "imported_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "fb33ecf91d89b4bab3edf58c6276284fb6b2f24120eb6dcce1f5f2064792b8cd"
+}

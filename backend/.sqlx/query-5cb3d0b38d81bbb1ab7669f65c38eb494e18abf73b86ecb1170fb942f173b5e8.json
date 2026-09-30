@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select student_id from fees where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "student_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "5cb3d0b38d81bbb1ab7669f65c38eb494e18abf73b86ecb1170fb942f173b5e8"
+}

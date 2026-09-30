@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) as \"c!\" from helpdesk_tickets where status in ('open','in_progress')",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "c!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "dd4a5be377f36047f46196af9bbb46dafbd17e0de9d94dab4ec0ab8854d2359e"
+}

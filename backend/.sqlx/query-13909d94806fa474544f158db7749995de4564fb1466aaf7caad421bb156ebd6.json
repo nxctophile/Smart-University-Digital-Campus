@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, submitted_at, course_ids from exam_form_submissions where window_id = $1 and student_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "submitted_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_ids",
+        "type_info": "Jsonb"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "13909d94806fa474544f158db7749995de4564fb1466aaf7caad421bb156ebd6"
+}

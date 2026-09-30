@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update transport_assignments set route_id = $1, stop_id = $2 where id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "344c2efe493f353856fdf1e5203eff5125cc691f3c81169e5e30a35d45ebcbd5"
+}

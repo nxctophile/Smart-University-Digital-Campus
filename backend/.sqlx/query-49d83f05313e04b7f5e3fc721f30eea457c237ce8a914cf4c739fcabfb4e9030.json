@@ -1,0 +1,92 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select era.id, era.exam_id, era.course_id, era.kind, era.fee_amount, era.status, era.applied_at, era.remarks,\n               c.code as course_code, e.name as exam_name, s.roll_number, s.first_name, s.last_name\n        from exam_review_applications era\n        join courses c on c.id = era.course_id\n        join exams e on e.id = era.exam_id\n        join students s on s.id = era.student_id\n        order by era.applied_at desc\n        limit 200\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "exam_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "kind",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "fee_amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 5,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "applied_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "exam_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "last_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "49d83f05313e04b7f5e3fc721f30eea457c237ce8a914cf4c739fcabfb4e9030"
+}

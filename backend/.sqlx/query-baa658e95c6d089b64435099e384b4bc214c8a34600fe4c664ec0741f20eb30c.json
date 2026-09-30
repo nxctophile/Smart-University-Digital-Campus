@@ -1,0 +1,32 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select exam_id, count(*) as \"total!\", sum(case when graded = false then 1 else 0 end) as \"pending!\"\n           from exam_results group by exam_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "exam_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "total!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "pending!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "baa658e95c6d089b64435099e384b4bc214c8a34600fe4c664ec0741f20eb30c"
+}

@@ -7,12 +7,10 @@ import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-
 import { StatCard } from "@/components/common/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useApiGet } from "@/lib/client/use-api";
 import { apiGet } from "@/lib/client/api";
-import type { getMyLoans, searchCatalog } from "@/lib/services/library";
-
-type LoanData = Awaited<ReturnType<typeof getMyLoans>>;
-type Book = Awaited<ReturnType<typeof searchCatalog>>[number];
+import type { LoanData, LibraryBook as Book } from "@/lib/api-types";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   active: "default",
@@ -20,10 +18,18 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = 
   overdue: "destructive",
 };
 
+function isDueSoon(dueAt: string): boolean {
+  const days = (new Date(dueAt).getTime() - Date.now()) / 86_400_000;
+  return days >= 0 && days <= 3;
+}
+
+const QUICK_CATEGORIES = ["Computer Science", "Electronics", "Mechanical", "Mathematics", "Management"];
+
 function CatalogBrowser() {
   const [query, setQuery] = useState("");
   const [books, setBooks] = useState<Book[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Book | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,11 +52,26 @@ function CatalogBrowser() {
 
   return (
     <section>
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-medium text-muted-foreground">Catalog</h2>
-        <div className="relative w-64">
-          <Search className="pointer-events-none absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search title, author, category" className="pl-8" />
+      <div className="mb-3 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-medium text-muted-foreground">Catalog</h2>
+          <div className="relative w-64">
+            <Search className="pointer-events-none absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" />
+            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search title, author, category" className="pl-8" />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {QUICK_CATEGORIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => setQuery(query === c ? "" : c)}
+              className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+                query === c ? "border-accent bg-accent/10 text-accent" : "border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
         </div>
       </div>
       {loading && <LoadingBlock rows={3} />}
@@ -58,7 +79,7 @@ function CatalogBrowser() {
       {!loading && books && books.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {books.map((b) => (
-            <div key={b.id} className="card-surface p-3.5">
+            <button key={b.id} onClick={() => setSelected(b)} className="card-surface-interactive p-3.5 text-left">
               <p className="text-sm font-medium leading-snug">{b.title}</p>
               <p className="mt-0.5 text-xs text-muted-foreground">{b.author}</p>
               <div className="mt-2 flex items-center justify-between">
@@ -67,10 +88,28 @@ function CatalogBrowser() {
                   {b.availableCopies}/{b.totalCopies} available
                 </span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selected?.title}</DialogTitle>
+            <DialogDescription>{selected?.author}</DialogDescription>
+          </DialogHeader>
+          {selected && (
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between"><span className="text-muted-foreground">Category</span><span className="font-medium">{selected.category}</span></div>
+              {selected.publisher && <div className="flex justify-between"><span className="text-muted-foreground">Publisher</span><span className="font-medium">{selected.publisher}</span></div>}
+              <div className="flex justify-between"><span className="text-muted-foreground">ISBN</span><span className="font-medium">{selected.isbn}</span></div>
+              {selected.shelfLocation && <div className="flex justify-between"><span className="text-muted-foreground">Shelf</span><span className="font-medium">{selected.shelfLocation}</span></div>}
+              <div className="flex justify-between"><span className="text-muted-foreground">Availability</span><span className="font-medium">{selected.availableCopies}/{selected.totalCopies} copies</span></div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
@@ -120,7 +159,10 @@ export default function LibraryPage() {
                           <p className="text-xs text-muted-foreground">{l.author}</p>
                         </td>
                         <td className="px-4 py-2.5 text-muted-foreground">{l.borrowedAt}</td>
-                        <td className="px-4 py-2.5 text-muted-foreground">{l.dueAt}</td>
+                        <td className={`px-4 py-2.5 ${l.status === "active" && isDueSoon(l.dueAt) ? "font-medium text-warning" : "text-muted-foreground"}`}>
+                          {l.dueAt}
+                          {l.status === "active" && isDueSoon(l.dueAt) && " · due soon"}
+                        </td>
                         <td className="px-4 py-2.5">
                           <Badge variant={STATUS_VARIANT[l.status] ?? "default"} className="capitalize">
                             {l.status}

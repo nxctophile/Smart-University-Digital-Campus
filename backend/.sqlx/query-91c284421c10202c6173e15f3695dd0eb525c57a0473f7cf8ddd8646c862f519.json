@@ -1,0 +1,82 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select sa.id, sa.status, sa.applied_at, sa.decided_at, sa.remarks, s.name as scholarship_name, s.amount,\n               st.roll_number, st.first_name, st.last_name, d.code as department_code\n        from scholarship_applications sa\n        join scholarships s on s.id = sa.scholarship_id\n        join students st on st.id = sa.student_id\n        join departments d on d.id = st.department_id\n        where $1::text is null or sa.status = $1\n        order by sa.applied_at desc\n        limit 100\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "applied_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "decided_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "scholarship_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 7,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "department_code",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "91c284421c10202c6173e15f3695dd0eb525c57a0473f7cf8ddd8646c862f519"
+}

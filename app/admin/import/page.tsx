@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { apiPost } from "@/lib/client/api";
 import { toast } from "sonner";
 import type { FieldSuggestion, CanonicalField } from "@/lib/importer/mapping";
-import type { ImportPreview } from "@/lib/services/import";
+import type { ImportPreview } from "@/lib/api-types";
 
 type UploadResult = {
   jobId: string;

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Landmark, ClipboardCheck, Award, UserCog, Briefcase, BookOpen, LifeBuoy, ArrowRight } from "lucide-react";
-import { getCurrentContext } from "@/lib/demo-session";
-import { can } from "@/lib/rbac/authorize";
-import type { PermissionKey } from "@/lib/rbac/permissions";
+import { getCurrentClientContext } from "@/lib/server-context";
+import { NoticesCard } from "@/components/common/notices-card";
 
-const QUICK_LINKS: { label: string; href: string; icon: LucideIcon; anyOf: PermissionKey[]; description: string }[] = [
+const QUICK_LINKS: { label: string; href: string; icon: LucideIcon; anyOf: string[]; description: string }[] = [
   { label: "Admissions", href: "/admin/admissions", icon: ClipboardCheck, anyOf: ["admission.application.view"], description: "Review applications & onboard students" },
   { label: "Finance", href: "/admin/finance", icon: Landmark, anyOf: ["finance.fees.view"], description: "Fee collection & transactions" },
   { label: "Examinations", href: "/admin/examinations", icon: Briefcase, anyOf: ["exam.results.manage"], description: "Publish exam results" },
@@ -21,12 +20,8 @@ const QUICK_LINKS: { label: string; href: string; icon: LucideIcon; anyOf: Permi
  * hardcoded component. Adding a new department role only needs a nav entry
  * + a tile here, never a new dashboard. */
 export async function EmployeeDashboard() {
-  const ctx = await getCurrentContext();
-  const visible = [];
-  for (const link of QUICK_LINKS) {
-    const grants = await Promise.all(link.anyOf.map((p) => can(ctx, p)));
-    if (grants.some(Boolean)) visible.push(link);
-  }
+  const ctx = await getCurrentClientContext();
+  const visible = QUICK_LINKS.filter((link) => link.anyOf.some((p) => ctx.permissions.includes(p)));
 
   return (
     <div className="space-y-6">
@@ -62,6 +57,8 @@ export async function EmployeeDashboard() {
           <p className="text-sm text-muted-foreground">No modules are assigned to your role yet - ask an administrator to grant access.</p>
         )}
       </div>
+
+      <NoticesCard />
     </div>
   );
 }

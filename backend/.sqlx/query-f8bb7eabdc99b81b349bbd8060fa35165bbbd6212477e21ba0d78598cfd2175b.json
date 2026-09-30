@@ -1,0 +1,71 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select e.id, e.name, e.exam_type, e.date, e.start_time, e.duration_minutes, e.max_marks,\n               c.code as course_code, c.name as course_name\n        from exams e join courses c on c.id = e.course_id\n        where e.programme_id = $1 and e.semester = $2\n        order by e.date\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "exam_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "date",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "start_time",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "duration_minutes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "max_marks",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "course_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "f8bb7eabdc99b81b349bbd8060fa35165bbbd6212477e21ba0d78598cfd2175b"
+}

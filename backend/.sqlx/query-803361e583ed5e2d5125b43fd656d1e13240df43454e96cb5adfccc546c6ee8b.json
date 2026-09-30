@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select programme_id, semester from courses where id = any($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "semester",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4Array"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "803361e583ed5e2d5125b43fd656d1e13240df43454e96cb5adfccc546c6ee8b"
+}

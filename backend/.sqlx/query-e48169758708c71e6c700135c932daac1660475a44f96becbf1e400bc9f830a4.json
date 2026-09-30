@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select ur.id, ur.user_id, ur.role_id, ur.scope, r.name as role_name, r.key as role_key\n           from user_roles ur join roles r on r.id = ur.role_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "role_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "scope",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "role_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "role_key",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "e48169758708c71e6c700135c932daac1660475a44f96becbf1e400bc9f830a4"
+}

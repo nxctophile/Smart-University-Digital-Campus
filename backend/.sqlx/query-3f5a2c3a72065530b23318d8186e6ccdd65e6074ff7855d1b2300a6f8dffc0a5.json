@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select code from departments where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "3f5a2c3a72065530b23318d8186e6ccdd65e6074ff7855d1b2300a6f8dffc0a5"
+}

@@ -1,12 +1,6 @@
-import { AccessContext, AccessDeniedError } from "@/lib/services/context";
-import { can } from "@/lib/rbac/authorize";
+import { BackendError, Caller } from "./backend";
 import { AssistantMessage, ChatMessage, ToolTrace, AICard } from "./types";
 import { tools, encodePendingAction } from "./tools";
-import * as attendanceSvc from "@/lib/services/attendance";
-import * as timetableSvc from "@/lib/services/timetable";
-import * as examsSvc from "@/lib/services/exams";
-import * as riskSvc from "@/lib/services/risk";
-import * as studentsSvc from "@/lib/services/students";
 import { AIProvider } from "./provider";
 import { GroqProvider } from "./groq-provider";
 
@@ -16,10 +10,10 @@ function nextId() {
   return `am-${Date.now().toString(36)}-${msgSeq}`;
 }
 
-async function callTool(ctx: AccessContext, name: string, args: Record<string, unknown>, trace: ToolTrace[]) {
+async function callTool(caller: Caller, name: string, args: Record<string, unknown>, trace: ToolTrace[]) {
   const tool = tools[name];
   if (!tool) throw new Error(`Unknown tool: ${name}`);
-  const result = await tool.run(ctx, args);
+  const result = await tool.run(caller, args);
   trace.push({ tool: name, summary: tool.description });
   return result;
 }
@@ -83,37 +77,59 @@ function lastStudentIdsFromHistory(history: ChatMessage[]): number[] | null {
   return null;
 }
 
+type TimetableSlot = {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  room: string;
+  courseCode: string;
+  courseName: string;
+  facultyName: string | null;
+  dayName: string;
+};
+
+function computeNextClass(timetable: TimetableSlot[], from: Date): (TimetableSlot & { daysFromNow: number }) | null {
+  if (!timetable.length) return null;
+  const dow = (from.getDay() + 6) % 7;
+  const hhmm = `${String(from.getHours()).padStart(2, "0")}:${String(from.getMinutes()).padStart(2, "0")}`;
+
+  for (let offset = 0; offset < 8; offset++) {
+    const day = (dow + offset) % 7;
+    if (day > 4) continue;
+    const slotsToday = timetable
+      .filter((s) => s.dayOfWeek === day)
+      .filter((s) => (offset === 0 ? s.startTime > hhmm : true))
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    if (slotsToday.length) return { ...slotsToday[0], daysFromNow: offset };
+  }
+  return null;
+}
+
 // ---------------------------------------------------------------------------
 // Intent handlers
 // ---------------------------------------------------------------------------
 
-async function handleSkipClass(ctx: AccessContext, message: string): Promise<AssistantMessage> {
+async function handleSkipClass(caller: Caller, message: string): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const timetable = await callTool(ctx, "get_timetable", {}, trace);
-  const attendance = await callTool(ctx, "get_attendance", {}, trace);
-  const tt = timetable as Awaited<ReturnType<typeof timetableSvc.getStudentTimetable>>;
-  const att = attendance as Awaited<ReturnType<typeof attendanceSvc.getAttendanceSummary>>;
+  const timetable = (await callTool(caller, "get_timetable", {}, trace)) as TimetableSlot[];
+  const attendance = (await callTool(caller, "get_attendance", {}, trace)) as {
+    courses: { courseId: number; courseCode: string; courseName: string; total: number; present: number; excused: number; percentage: number }[];
+  };
 
-  const course = findCourseFromMessage(message, att.courses);
+  const course = findCourseFromMessage(message, attendance.courses);
   if (!course) {
     return reply("I couldn't identify which class you meant. Could you name the course, e.g. \"Can I miss tomorrow's DBMS class?\"", { toolTrace: trace });
   }
 
   const isTomorrow = /tomorrow/i.test(message);
   const targetDow = isTomorrow ? (new Date().getDay() + 1 + 6) % 7 : null;
-  const meetsOnTarget = targetDow !== null && tt.some((s) => s.courseCode === course.courseCode && s.dayOfWeek === targetDow);
+  const meetsOnTarget = targetDow !== null && timetable.some((s) => s.courseCode === course.courseCode && s.dayOfWeek === targetDow);
 
   if (isTomorrow && !meetsOnTarget) {
     return reply(`Good news - ${course.courseName} doesn't meet tomorrow, so there's nothing to skip.`, { toolTrace: trace });
   }
 
-  const projected = await callTool(
-    ctx,
-    "get_attendance",
-    {},
-    trace,
-  );
-  const courseAtt = (projected as typeof att).courses.find((c) => c.courseId === course.courseId)!;
+  const courseAtt = attendance.courses.find((c) => c.courseId === course.courseId)!;
   const projectedTotal = courseAtt.total + 1;
   const projectedPresent = courseAtt.present + courseAtt.excused;
   const projectedPct = Math.round((projectedPresent / projectedTotal) * 1000) / 10;
@@ -138,15 +154,15 @@ async function handleSkipClass(ctx: AccessContext, message: string): Promise<Ass
   });
 }
 
-async function handleCertificateRequest(ctx: AccessContext, message: string): Promise<AssistantMessage> {
+async function handleCertificateRequest(caller: Caller, message: string): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const profile = (await callTool(ctx, "get_student_profile", {}, trace)) as Awaited<ReturnType<typeof studentsSvc.getStudentProfile>>;
+  const profile = (await callTool(caller, "get_student_profile", {}, trace)) as { firstName: string };
 
   const typeMatch = /enrollment/i.test(message) ? "enrollment" : /character/i.test(message) ? "character" : /transfer/i.test(message) ? "transfer" : "bonafide";
   const purposeMatch = message.match(/for ([a-z ]+)/i);
   const purpose = purposeMatch ? purposeMatch[1].trim() : "General purpose";
 
-  const result = (await callTool(ctx, "request_certificate", { type: typeMatch, purpose }, trace)) as {
+  const result = (await callTool(caller, "request_certificate", { type: typeMatch, purpose }, trace)) as {
     success: boolean;
     eligibility: { checks: { label: string; passed: boolean; detail: string }[] };
     certificate: { id: number; verificationCode: string; issuedAt: string; purpose: string | null; type: string } | null;
@@ -188,10 +204,9 @@ async function handleCertificateRequest(ctx: AccessContext, message: string): Pr
   );
 }
 
-async function handleHelpdeskComplaint(ctx: AccessContext, message: string): Promise<AssistantMessage> {
+async function handleHelpdeskComplaint(caller: Caller, message: string): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const hostel = await callTool(ctx, "get_hostel_information", {}, trace);
-  const hostelInfo = hostel as Awaited<ReturnType<typeof import("@/lib/services/hostel").getHostelInfo>>;
+  const hostelInfo = (await callTool(caller, "get_hostel_information", {}, trace)) as { hostelName: string; roomNumber: string } | null;
 
   const isWifi = /wifi|internet|network/i.test(message);
   const isTransport = /bus|transport|route/i.test(message);
@@ -216,9 +231,13 @@ async function handleHelpdeskComplaint(ctx: AccessContext, message: string): Pro
   });
 }
 
-async function handleFeeStatus(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleFeeStatus(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const fees = (await callTool(ctx, "get_fee_status", {}, trace)) as Awaited<ReturnType<typeof import("@/lib/services/fees").getFeeStatus>>;
+  const fees = (await callTool(caller, "get_fee_status", {}, trace)) as {
+    items: { feeType: string; amount: number; pending: number; dueDate: string; status: string }[];
+    totalDue: number;
+    hasOverdue: boolean;
+  };
   if (!fees.items.length) return reply("You have no fee records on file.", { toolTrace: trace });
 
   const text = fees.totalDue > 0
@@ -245,9 +264,12 @@ async function handleFeeStatus(ctx: AccessContext): Promise<AssistantMessage> {
   });
 }
 
-async function handleAttendance(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleAttendance(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const att = (await callTool(ctx, "get_attendance", {}, trace)) as Awaited<ReturnType<typeof attendanceSvc.getAttendanceSummary>>;
+  const att = (await callTool(caller, "get_attendance", {}, trace)) as {
+    overallPercentage: number;
+    courses: { courseId: number; courseCode: string; courseName: string; percentage: number }[];
+  };
   return reply(`Your overall attendance is ${att.overallPercentage}% across ${att.courses.length} courses.`, {
     toolTrace: trace,
     cards: [
@@ -266,10 +288,10 @@ async function handleAttendance(ctx: AccessContext): Promise<AssistantMessage> {
   });
 }
 
-async function handleNextClass(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleNextClass(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const next = await timetableSvc.getNextClass(ctx, ctx.studentId ?? undefined, new Date());
-  trace.push({ tool: "get_timetable", summary: "Computed next upcoming session" });
+  const timetable = (await callTool(caller, "get_timetable", {}, trace)) as TimetableSlot[];
+  const next = computeNextClass(timetable, new Date());
   if (!next) return reply("You don't have any more classes scheduled this week.", { toolTrace: trace });
 
   const when = next.daysFromNow === 0 ? "today" : next.daysFromNow === 1 ? "tomorrow" : next.dayName;
@@ -280,9 +302,9 @@ async function handleNextClass(ctx: AccessContext): Promise<AssistantMessage> {
   });
 }
 
-async function handleExamSchedule(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleExamSchedule(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const exams = (await callTool(ctx, "get_exam_schedule", {}, trace)) as Awaited<ReturnType<typeof examsSvc.getExamSchedule>>;
+  const exams = (await callTool(caller, "get_exam_schedule", {}, trace)) as { name: string; date: string; maxMarks: number }[];
   const upcoming = exams.filter((e) => new Date(e.date) >= new Date(new Date().toDateString()));
   if (!upcoming.length) return reply("No upcoming exams scheduled right now.", { toolTrace: trace });
 
@@ -303,9 +325,9 @@ async function handleExamSchedule(ctx: AccessContext): Promise<AssistantMessage>
   });
 }
 
-async function handleTransport(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleTransport(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const info = (await callTool(ctx, "get_transport_status", {}, trace)) as Awaited<ReturnType<typeof import("@/lib/services/transport").getTransportInfo>>;
+  const info = (await callTool(caller, "get_transport_status", {}, trace)) as { routeName: string; routeCode: string; stopName: string; arrivalTime: string; vehicleNumber: string } | null;
   if (!info) return reply("You don't have a transport route assigned yet. You can request one from the Transport section.", { toolTrace: trace });
   return reply(`You're on ${info.routeName} (${info.routeCode}), boarding at ${info.stopName} around ${info.arrivalTime}.`, {
     toolTrace: trace,
@@ -313,9 +335,9 @@ async function handleTransport(ctx: AccessContext): Promise<AssistantMessage> {
   });
 }
 
-async function handleLibrary(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleLibrary(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const r = (await callTool(ctx, "get_library_status", {}, trace)) as Awaited<ReturnType<typeof import("@/lib/services/library").getMyLoans>>;
+  const r = (await callTool(caller, "get_library_status", {}, trace)) as { activeCount: number; totalFine: number };
   const text =
     r.activeCount === 0
       ? "You don't have any books borrowed right now."
@@ -327,11 +349,12 @@ async function handleLibrary(ctx: AccessContext): Promise<AssistantMessage> {
   });
 }
 
-async function handleScholarships(ctx: AccessContext): Promise<AssistantMessage> {
+async function handleScholarships(caller: Caller): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
-  const r = (await callTool(ctx, "get_scholarships", {}, trace)) as Awaited<
-    ReturnType<typeof import("@/lib/services/scholarships").getStudentScholarshipView>
-  >;
+  const r = (await callTool(caller, "get_scholarships", {}, trace)) as {
+    scholarships: { eligible: boolean; alreadyApplied: boolean }[];
+    applications: unknown[];
+  };
   const eligibleCount = r.scholarships.filter((s) => s.eligible && !s.alreadyApplied).length;
   const text = r.applications.length
     ? `You have ${r.applications.length} scholarship application(s) in progress, and ${eligibleCount} more you're eligible to apply for.`
@@ -339,16 +362,21 @@ async function handleScholarships(ctx: AccessContext): Promise<AssistantMessage>
   return reply(text, { toolTrace: trace, actions: [{ id: "go-scholarships", label: "Go to Scholarships", kind: "link", href: "/scholarships" }] });
 }
 
-async function handleAdminAtRisk(ctx: AccessContext, message: string): Promise<AssistantMessage> {
+async function handleAdminAtRisk(caller: Caller, message: string): Promise<AssistantMessage> {
   const trace: ToolTrace[] = [];
   const attendanceMatch = message.match(/below\s+(\d{1,3})%?/i);
   const maxAttendance = attendanceMatch ? Number(attendanceMatch[1]) : 75;
   const daysMatch = message.match(/next\s+(\d+)\s*day/i) || message.match(/(\d+)\s*day/i);
   const examWithinDays = /week/i.test(message) ? 7 : daysMatch ? Number(daysMatch[1]) : /exam/i.test(message) ? 7 : undefined;
 
-  const rows = (await callTool(ctx, "get_at_risk_students", { maxAttendance, examWithinDays, limit: 200 }, trace)) as Awaited<
-    ReturnType<typeof riskSvc.getAtRiskStudents>
-  >;
+  const rows = (await callTool(caller, "get_at_risk_students", { maxAttendance, examWithinDays, limit: 200 }, trace)) as {
+    studentId: number;
+    rollNumber: string;
+    name: string;
+    department: string;
+    attendancePercentage: number;
+    riskLevel: string;
+  }[];
 
   const text = examWithinDays
     ? `${rows.length} students found with attendance below ${maxAttendance}% who have exams within the next ${examWithinDays} days.`
@@ -399,7 +427,8 @@ async function handleAdminAtRisk(ctx: AccessContext, message: string): Promise<A
   });
 }
 
-async function handleAdminNotify(ctx: AccessContext, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
+async function handleAdminNotify(caller: Caller, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
+  void caller;
   const studentIds = lastStudentIdsFromHistory(history);
   if (!studentIds || !studentIds.length) {
     return reply("I don't have a recent student list to notify. Try a search first, e.g. \"Show students below 75% attendance.\"");
@@ -426,48 +455,49 @@ async function handleGreeting(): Promise<AssistantMessage> {
 // ---------------------------------------------------------------------------
 
 export class RuleBasedProvider implements AIProvider {
-  async respond(ctx: AccessContext, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
+  async respond(caller: Caller, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
     const m = message.toLowerCase().trim();
+    const can = (permission: string) => caller.client.permissions.includes(permission);
 
     try {
-      if (await can(ctx, "student.performance.view")) {
+      if (can("student.performance.view")) {
         if (/notify/.test(m) && (/parent/.test(m) || /student/.test(m)) && !/(below|attendance|exam)/.test(m)) {
-          return await handleAdminNotify(ctx, message, history);
+          return await handleAdminNotify(caller, message, history);
         }
         if (/(below|above)\s+\d/.test(m) || /at.risk/.test(m) || /struggling/.test(m) || (/attendance/.test(m) && /exam/.test(m))) {
-          return await handleAdminAtRisk(ctx, message);
+          return await handleAdminAtRisk(caller, message);
         }
       }
 
       if (/(skip|miss).*(class|lecture|lab)/.test(m) || (/class/.test(m) && /tomorrow/.test(m))) {
-        return await handleSkipClass(ctx, message);
+        return await handleSkipClass(caller, message);
       }
       if (/certificate|bonafide|enrollment letter/.test(m)) {
-        return await handleCertificateRequest(ctx, message);
+        return await handleCertificateRequest(caller, message);
       }
       if (/wifi|complaint|not working|issue|ticket|leak|broken/.test(m)) {
-        return await handleHelpdeskComplaint(ctx, message);
+        return await handleHelpdeskComplaint(caller, message);
       }
       if (/fee|due amount|pending.*fee/.test(m)) {
-        return await handleFeeStatus(ctx);
+        return await handleFeeStatus(caller);
       }
       if (/next class|upcoming class|what.*class.*(today|now)/.test(m)) {
-        return await handleNextClass(ctx);
+        return await handleNextClass(caller);
       }
       if (/exam|midterm|test schedule/.test(m)) {
-        return await handleExamSchedule(ctx);
+        return await handleExamSchedule(caller);
       }
       if (/attendance/.test(m)) {
-        return await handleAttendance(ctx);
+        return await handleAttendance(caller);
       }
       if (/bus|transport|route|shuttle/.test(m)) {
-        return await handleTransport(ctx);
+        return await handleTransport(caller);
       }
       if (/librar|borrow.*book|book.*borrow|due.*book/.test(m)) {
-        return await handleLibrary(ctx);
+        return await handleLibrary(caller);
       }
       if (/scholarship/.test(m)) {
-        return await handleScholarships(ctx);
+        return await handleScholarships(caller);
       }
       if (/^(hi|hello|hey)\b/.test(m)) {
         return await handleGreeting();
@@ -477,7 +507,7 @@ export class RuleBasedProvider implements AIProvider {
         "I'm not sure how to help with that yet. Try asking about attendance, your timetable, fees, certificates, hostel, or transport.",
       );
     } catch (err) {
-      if (err instanceof AccessDeniedError) {
+      if (err instanceof BackendError && err.status === 403) {
         return reply("I don't have access to that information for your account.");
       }
       const messageText = err instanceof Error ? err.message : "Something went wrong.";
@@ -496,12 +526,12 @@ function selectProvider(): AIProvider {
 export const aiProvider: AIProvider = selectProvider();
 
 export async function executePendingAction(
-  ctx: AccessContext,
+  caller: Caller,
   pending: { tool: string; args: Record<string, unknown>; successText: string },
 ): Promise<AssistantMessage> {
   if (pending.tool === "noop") return reply(pending.successText);
   const trace: ToolTrace[] = [];
-  const result = await callTool(ctx, pending.tool, pending.args, trace);
+  const result = await callTool(caller, pending.tool, pending.args, trace);
 
   if (pending.tool === "create_helpdesk_ticket") {
     const ticket = result as { ticketNumber: string; id: number };

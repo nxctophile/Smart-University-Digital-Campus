@@ -1,11 +1,11 @@
-import { getCurrentContext } from "@/lib/demo-session";
+import { getCurrentClientContext } from "@/lib/server-context";
 import { StudentDashboard } from "@/components/dashboard/student-dashboard";
 import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
 import { FacultyDashboard } from "@/components/dashboard/faculty-dashboard";
 import { EmployeeDashboard } from "@/components/dashboard/employee-dashboard";
 
 export default async function HomePage() {
-  const ctx = await getCurrentContext();
+  const ctx = await getCurrentClientContext();
 
   // Which shell widget to render is picked from the caller's own identity,
   // never used as a security decision - every dashboard's data still comes

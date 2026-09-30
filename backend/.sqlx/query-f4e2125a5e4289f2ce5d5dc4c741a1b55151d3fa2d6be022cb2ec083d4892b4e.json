@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select sum(case when status in ('present','excused') then 1 else 0 end) as present, count(*) as \"total!\" from attendance",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "present",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "total!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "f4e2125a5e4289f2ce5d5dc4c741a1b55151d3fa2d6be022cb2ec083d4892b4e"
+}

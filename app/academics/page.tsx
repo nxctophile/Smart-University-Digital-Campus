@@ -6,11 +6,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-blocks";
 import { AiCardView } from "@/components/ai/ai-card";
 import { Badge } from "@/components/ui/badge";
-import type { getExamSchedule, getMyResults } from "@/lib/services/exams";
-import type { StudentRisk } from "@/lib/services/risk";
-
-type Exam = Awaited<ReturnType<typeof getExamSchedule>>[number];
-type ResultRow = Awaited<ReturnType<typeof getMyResults>>[number];
+import type { Exam, ResultRow, StudentRisk } from "@/lib/api-types";
 
 export default function AcademicsPage() {
   const { data: examData, loading: examLoading, error: examError, reload } = useApiGet<{ exams: Exam[] }>("/api/exams");

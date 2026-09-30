@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update attendance set status = $1, marked_by = $2 where id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ba7ecf5e337687669f5ddae5c1bf5e9abdc037dce53a45828351f47e09ecec49"
+}

@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select c.id as course_id, c.code as course_code, c.name as course_name, a.status, count(*) as \"count!\"\n        from attendance a\n        join courses c on c.id = a.course_id\n        where a.student_id = $1\n        group by c.id, c.code, c.name, a.status\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "count!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "58e1531b353e1b894561c8086e2db5e5a560abf95254da8fa8d3c02091d9d21b"
+}

@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from books where $1::text is null or title ilike $1 or author ilike $1 or category ilike $1 limit 30",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "isbn",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "author",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "publisher",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "total_copies",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "available_copies",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "shelf_location",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "bbe5ebe747a2c0734e19b7429c206bb36ccd8387267b65e746448a812c5e867c"
+}

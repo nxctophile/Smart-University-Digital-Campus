@@ -1,0 +1,16 @@
+[Unit]
+Description=Campus OS backend
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=campus
+WorkingDirectory=/opt/campus-backend
+EnvironmentFile=/opt/campus-backend/.env
+ExecStart=/opt/campus-backend/campus-backend
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

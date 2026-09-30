@@ -1,0 +1,38 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n            coalesce(sum(amount), 0) as \"total_billed!\",\n            coalesce(sum(amount_paid), 0) as \"total_collected!\",\n            sum(case when status = 'overdue' then 1 else 0 end) as \"overdue_count!\",\n            sum(case when status = 'pending' then 1 else 0 end) as \"pending_count!\"\n           from fees",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total_billed!",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 1,
+        "name": "total_collected!",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 2,
+        "name": "overdue_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "pending_count!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "dac4b3a9d9c30cb52ebf54f0b0cc56a39f040964d2f67a787598efcbca39ceef"
+}

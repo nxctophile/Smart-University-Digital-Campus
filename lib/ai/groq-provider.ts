@@ -8,7 +8,7 @@
  */
 import Groq from "groq-sdk";
 import type { ChatCompletionMessageParam, ChatCompletionTool } from "groq-sdk/resources/chat/completions";
-import { AccessContext, AccessDeniedError } from "@/lib/services/context";
+import { BackendError, Caller } from "./backend";
 import { AssistantMessage, ChatMessage, ToolTrace } from "./types";
 import { tools, encodePendingAction } from "./tools";
 import { formatToolResult } from "./format-tool-result";
@@ -30,8 +30,8 @@ function toolsToGroqSchema(): ChatCompletionTool[] {
   }));
 }
 
-function systemPrompt(ctx: AccessContext): string {
-  return `You are "AI", the assistant inside Campus OS - a digital campus platform for Central Institute of Technology. You are talking to a logged-in ${ctx.role} named ${ctx.name}.
+function systemPrompt(client: Caller["client"]): string {
+  return `You are "AI", the assistant inside Campus OS - a digital campus platform for Central Institute of Technology. You are talking to a logged-in ${client.role} named ${client.name}.
 
 Rules:
 - Never invent data. Only state facts you retrieved via a tool call in this conversation.
@@ -79,9 +79,9 @@ export class GroqProvider implements AIProvider {
     this.client = new Groq({ apiKey });
   }
 
-  async respond(ctx: AccessContext, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
+  async respond(caller: Caller, message: string, history: ChatMessage[]): Promise<AssistantMessage> {
     const messages: ChatCompletionMessageParam[] = [
-      { role: "system", content: systemPrompt(ctx) },
+      { role: "system", content: systemPrompt(caller.client) },
       ...historyToGroqMessages(history),
       { role: "user", content: message },
     ];
@@ -134,11 +134,11 @@ export class GroqProvider implements AIProvider {
           const args = safeParseArgs(call.function.arguments);
           let result: unknown;
           try {
-            result = def ? await def.run(ctx, args) : { error: `Unknown tool ${call.function.name}` };
+            result = def ? await def.run(caller, args) : { error: `Unknown tool ${call.function.name}` };
           } catch (err) {
             // Never let a permission error's internals (which record/field
             // was denied) reach the model - it would just relay them.
-            const message = err instanceof AccessDeniedError
+            const message = err instanceof BackendError && err.status === 403
               ? "I don't have access to that information for your account."
               : err instanceof Error ? err.message : "Tool call failed";
             result = { error: message };

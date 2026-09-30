@@ -10,9 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useApiGet } from "@/lib/client/use-api";
 import { apiMutate } from "@/lib/client/api";
 import { toast } from "sonner";
-import type { getStudentScholarshipView } from "@/lib/services/scholarships";
-
-type ViewData = Awaited<ReturnType<typeof getStudentScholarshipView>>;
+import type { StudentScholarshipView as ViewData } from "@/lib/api-types";
 
 const STEPS = ["submitted", "under_review", "approved", "disbursed"] as const;
 

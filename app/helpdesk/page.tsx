@@ -22,9 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import type { listMyTickets, TicketCategory } from "@/lib/services/helpdesk";
-
-type Ticket = Awaited<ReturnType<typeof listMyTickets>>[number];
+import type { HelpdeskTicket as Ticket, TicketCategory } from "@/lib/api-types";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   open: "default",

@@ -1,0 +1,42 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update legacy_role_mappings set mapped_role_key = $1, notes = $2 where id = $3 returning id, legacy_role, mapped_role_key, notes",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "legacy_role",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "mapped_role_key",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "notes",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "23828753c69abfd297b54e93c9580402707e221b225bcc96a355f782acc32c47"
+}

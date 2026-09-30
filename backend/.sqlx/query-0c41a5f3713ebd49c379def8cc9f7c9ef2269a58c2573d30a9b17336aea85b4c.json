@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select p.id, p.amount, p.method, p.transaction_ref, p.status, p.paid_at, f.fee_type, f.academic_year, f.semester\n        from payments p join fees f on f.id = p.fee_id\n        where p.student_id = $1 and p.status = 'paid'\n        order by p.paid_at desc\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 2,
+        "name": "method",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "transaction_ref",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "paid_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "fee_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "academic_year",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "semester",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0c41a5f3713ebd49c379def8cc9f7c9ef2269a58c2573d30a9b17336aea85b4c"
+}

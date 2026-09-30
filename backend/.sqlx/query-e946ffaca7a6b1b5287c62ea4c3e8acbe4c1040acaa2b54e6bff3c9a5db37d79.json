@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into notifications (university_id, student_id, audience_role, title, message, category) values (1, $1, $2, $3, $4, 'academic')",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e946ffaca7a6b1b5287c62ea4c3e8acbe4c1040acaa2b54e6bff3c9a5db37d79"
+}

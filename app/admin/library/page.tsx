@@ -9,18 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useApiGet } from "@/lib/client/use-api";
 import { apiMutate } from "@/lib/client/api";
 import { toast } from "sonner";
-import type { getLibraryOverview, listOverdueLoans } from "@/lib/services/library";
-
-type Overview = Awaited<ReturnType<typeof getLibraryOverview>>;
-type OverdueLoan = Awaited<ReturnType<typeof listOverdueLoans>>[number] & {
-  id: number;
-  dueAt: string;
-  fineAmount: number;
-  title: string;
-  rollNumber: string;
-  firstName: string;
-  lastName: string;
-};
+import type { LibraryOverview as Overview, OverdueLoan } from "@/lib/api-types";
 
 export default function AdminLibraryPage() {
   const { data: overview, loading, error, reload } = useApiGet<Overview>("/api/admin/library/overview");

@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update students set source_system = 'legacy-import', source_table = $1, source_id = $2, last_synced_at = $3, updated_at = now() where id = $4",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c0ee90d2b097980aa8f7ab6fcc6a2702a8e7408154d02c938ee4fc5773144111"
+}

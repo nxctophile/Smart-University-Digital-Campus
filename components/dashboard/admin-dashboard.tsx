@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Users, CalendarCheck, Wallet, LifeBuoy, FileCheck2, AlertTriangle, ArrowRight } from "lucide-react";
-import { getCurrentContext } from "@/lib/demo-session";
-import { getAdminOverview } from "@/lib/services/admin";
-import { getAtRiskStudents } from "@/lib/services/risk";
+import { backendGet } from "@/lib/server-context";
+import type { AdminOverview, StudentRisk } from "@/lib/api-types";
 import { StatCard } from "@/components/common/stat-card";
 import { HomeAiInput } from "./home-ai-input";
 import { DepartmentAttendanceChart } from "./department-attendance-chart";
 import { Badge } from "@/components/ui/badge";
+import { NoticesCard } from "@/components/common/notices-card";
 
 const ADMIN_PROMPTS = [
   "Show students with attendance below 75% who have exams this week",
@@ -21,9 +21,8 @@ const RISK_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
 };
 
 export async function AdminDashboard() {
-  const ctx = await getCurrentContext();
-  const overview = await getAdminOverview(ctx);
-  const atRisk = await getAtRiskStudents(ctx, { riskLevel: "high", limit: 6 });
+  const overview = await backendGet<AdminOverview>("/api/admin/overview");
+  const { students: atRisk } = await backendGet<{ students: StudentRisk[] }>("/api/admin/at-risk?riskLevel=high&limit=6");
 
   return (
     <div className="space-y-6">
@@ -92,6 +91,8 @@ export async function AdminDashboard() {
           </div>
         </section>
       </div>
+
+      <NoticesCard />
     </div>
   );
 }

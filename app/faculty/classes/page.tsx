@@ -11,10 +11,9 @@ import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MarkAttendancePanel } from "@/components/faculty/mark-attendance-panel";
 import { EnterMarksPanel } from "@/components/faculty/enter-marks-panel";
-import type { getMyCoursesWithStats, getStudentsInCourse } from "@/lib/services/faculty";
+import type { FacultyCourseWithStats as Course, FacultyRosterStudent } from "@/lib/api-types";
 
-type Course = Awaited<ReturnType<typeof getMyCoursesWithStats>>[number];
-type Roster = Awaited<ReturnType<typeof getStudentsInCourse>>;
+type Roster = FacultyRosterStudent[];
 
 const RISK_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   high: "destructive",

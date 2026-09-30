@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select coalesce(sum(s.amount), 0) as \"total!\" from scholarship_applications sa join scholarships s on s.id = sa.scholarship_id where sa.status = 'disbursed'",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total!",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "b944559bddace8a473db98e6eedd0708edc7d410f244c2ab29021c0d877c149f"
+}

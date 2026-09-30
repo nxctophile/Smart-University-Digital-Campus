@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            update students set\n              father_name = coalesce($1, father_name),\n              mother_name = coalesce($2, mother_name),\n              category = coalesce($3, category),\n              address = coalesce($4, address),\n              pincode = coalesce($5, pincode),\n              updated_at = now()\n            where id = $6\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b2129369b2592eda56491862cfa997db06864c8ba6a41dbf764c4f23a822b4b5"
+}

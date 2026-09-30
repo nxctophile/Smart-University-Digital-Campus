@@ -1,0 +1,62 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from users order by name",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "role",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "faculty_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "parent_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "employee_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "9e8550fbc6a406b3413d9fce369fab529277c19826b16d8d1b9f270e7671a039"
+}

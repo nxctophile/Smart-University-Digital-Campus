@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into password_change_log (user_id, note) values ($1, 'Password changed via My Account')",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f262768ea4b69bdbe27eaa3ed83923f5ba1f53d97500b32189e8e711a9388215"
+}

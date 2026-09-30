@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select h.name as hostel_name, h.block, h.warden, r.room_number, r.capacity, ra.assigned_at\n        from room_assignments ra\n        join rooms r on r.id = ra.room_id\n        join hostels h on h.id = r.hostel_id\n        where ra.student_id = $1 and ra.status = 'active'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "hostel_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "block",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "warden",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "room_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "capacity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "assigned_at",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "ff386ee90f3221fb60a7cfcf8493f103e175bf099b67a3d0746cc4f52e4cf99e"
+}

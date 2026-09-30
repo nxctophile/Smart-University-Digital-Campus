@@ -10,14 +10,7 @@ import { useApiGet } from "@/lib/client/use-api";
 import { apiMutate } from "@/lib/client/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import type { listRoles, listUsersWithRoles, listDepartmentsForScopePicker, listLegacyRoleMappings, getAuditLog } from "@/lib/services/rbac-admin";
-import type { PermissionDef } from "@/lib/rbac/permissions";
-
-type RoleRow = Awaited<ReturnType<typeof listRoles>>[number];
-type UserRow = Awaited<ReturnType<typeof listUsersWithRoles>>[number];
-type DeptRow = Awaited<ReturnType<typeof listDepartmentsForScopePicker>>[number];
-type LegacyRow = Awaited<ReturnType<typeof listLegacyRoleMappings>>[number];
-type AuditRow = Awaited<ReturnType<typeof getAuditLog>>[number];
+import type { RoleRow, UserRow, DeptRow, LegacyRow, AuditRow, PermissionDef } from "@/lib/api-types";
 
 type Tab = "matrix" | "users" | "legacy" | "audit";
 const TABS: { key: Tab; label: string; icon: typeof ShieldCheck }[] = [

@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select s.first_name, s.last_name, s.roll_number, s.current_semester, s.programme_id,\n               p.name as programme, d.name as department\n        from students s join programmes p on p.id = s.programme_id join departments d on d.id = p.department_id\n        where s.id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "current_semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "programme",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "department",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b3c46e009e098ec24c9ab818ab9b23a893e216f3eb9ee1052e00a130ad843ed6"
+}

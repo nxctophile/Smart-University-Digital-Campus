@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id from attendance where course_id = $1 and date = $2 and student_id = $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "50858040b3e786a91e22f3e1d718b1138956e425c96af0b483b87b372eb304a9"
+}

@@ -11,20 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useApiGet } from "@/lib/client/use-api";
 import { apiMutate } from "@/lib/client/api";
 import { toast } from "sonner";
-import type { getScholarshipAdminOverview, listApplications } from "@/lib/services/scholarships";
-
-type Overview = Awaited<ReturnType<typeof getScholarshipAdminOverview>>;
-type Application = Awaited<ReturnType<typeof listApplications>>[number] & {
-  id: number;
-  status: string;
-  scholarshipName: string;
-  amount: number;
-  rollNumber: string;
-  firstName: string;
-  lastName: string;
-  departmentCode: string;
-  appliedAt: string;
-};
+import type { ScholarshipAdminOverview as Overview, ScholarshipApplication as Application } from "@/lib/api-types";
 
 export default function AdminScholarshipsPage() {
   const { data: overview, loading, error, reload } = useApiGet<Overview>("/api/admin/scholarships/overview");

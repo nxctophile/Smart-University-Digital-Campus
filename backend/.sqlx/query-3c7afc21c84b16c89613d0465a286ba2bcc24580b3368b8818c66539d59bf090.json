@@ -1,0 +1,80 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select per.id, per.student_id, per.payload, per.document_ids, per.status, per.submitted_at, per.decided_at, per.remarks,\n               s.roll_number, s.first_name, s.last_name\n        from profile_edit_requests per\n        join students s on s.id = per.student_id\n        order by per.submitted_at desc\n        limit 200\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "payload",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 3,
+        "name": "document_ids",
+        "type_info": "Int4Array"
+      },
+      {
+        "ordinal": 4,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "submitted_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "last_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "3c7afc21c84b16c89613d0465a286ba2bcc24580b3368b8818c66539d59bf090"
+}

@@ -1,0 +1,98 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select\n          s.id as \"student_id!\", s.roll_number, s.first_name, s.last_name, s.current_semester, s.programme_id,\n          d.name as department, d.code as department_code, p.name as programme,\n          coalesce(att.total, 0) as \"att_total!\", coalesce(att.present, 0) as \"att_present!\",\n          ex.avg_pct as recent_test_avg,\n          fe.status as \"fee_status?\",\n          coalesce(tk.open_count, 0) as \"open_tickets!\"\n        from students s\n        join departments d on d.id = s.department_id\n        join programmes p on p.id = s.programme_id\n        left join (\n          select student_id, count(*) total, sum(case when status in ('present','excused') then 1 else 0 end) present\n          from attendance group by student_id\n        ) att on att.student_id = s.id\n        left join (\n          select er.student_id, avg(er.marks_obtained * 100.0 / e.max_marks) avg_pct\n          from exam_results er join exams e on e.id = er.exam_id\n          group by er.student_id\n        ) ex on ex.student_id = s.id\n        left join lateral (\n          select f.status from fees f where f.student_id = s.id\n          order by case f.status when 'overdue' then 0 when 'pending' then 1 when 'partial' then 2 else 3 end\n          limit 1\n        ) fe on true\n        left join (\n          select student_id, count(*) open_count from helpdesk_tickets\n          where status in ('open','in_progress') and student_id is not null\n          group by student_id\n        ) tk on tk.student_id = s.id\n        where s.status = 'active'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "student_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "current_semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "department",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "department_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "programme",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "att_total!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "att_present!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 11,
+        "name": "recent_test_avg",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 12,
+        "name": "fee_status?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 13,
+        "name": "open_tickets!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      null,
+      null,
+      true,
+      true,
+      null
+    ]
+  },
+  "hash": "e5a18c1b904cf17260dc384f38513849f2e427fe68dd12aed4979e5d66c4f38c"
+}

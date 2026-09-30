@@ -1,0 +1,65 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from scholarship_applications where scholarship_id = $1 and student_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "scholarship_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "student_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "applied_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "decided_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "documents_submitted",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "e23c3a60b72d5eeb798cba5094cb543d07b7d19f5939a2f142c58b8ce608171a"
+}

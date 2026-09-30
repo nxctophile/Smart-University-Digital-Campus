@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from exam_form_windows where semester = $1 and published = true order by id desc limit 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "opens_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "closes_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "published",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "761895c058e8a55ed52f03043291316681a8ed0f9e7ac589e797c3ab15ba8562"
+}

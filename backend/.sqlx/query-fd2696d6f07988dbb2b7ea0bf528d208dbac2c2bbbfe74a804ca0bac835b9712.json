@@ -1,0 +1,88 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select era.id, era.exam_id, era.course_id, era.kind, era.fee_amount, era.status, era.applied_at, era.decided_at,\n               era.remarks, era.parent_application_id, c.code as course_code, e.name as exam_name\n        from exam_review_applications era\n        join courses c on c.id = era.course_id\n        join exams e on e.id = era.exam_id\n        where era.student_id = $1\n        order by era.applied_at desc\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "exam_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "kind",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "fee_amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 5,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "applied_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "remarks",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "parent_application_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "exam_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "fd2696d6f07988dbb2b7ea0bf528d208dbac2c2bbbfe74a804ca0bac835b9712"
+}

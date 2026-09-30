@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select file_data, mime_type, file_name from student_documents where id = $1 and student_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "file_data",
+        "type_info": "Bytea"
+      },
+      {
+        "ordinal": 1,
+        "name": "mime_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "file_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "8e7dddbab8871227328b518d392f9b4f528634456ed9188175589f75d5457ab1"
+}

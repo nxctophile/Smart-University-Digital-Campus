@@ -7,9 +7,8 @@ import { useSession } from "@/lib/client/session";
 import { HomeAiInput } from "./home-ai-input";
 import { StatCard } from "@/components/common/stat-card";
 import { LoadingBlock, ErrorBlock } from "@/components/common/state-blocks";
-import type { getStudentDashboard } from "@/lib/services/dashboard";
-
-type DashboardData = Awaited<ReturnType<typeof getStudentDashboard>>;
+import { NoticesCard } from "@/components/common/notices-card";
+import type { StudentDashboard as DashboardData } from "@/lib/api-types";
 
 const STUDENT_PROMPTS = [
   "Can I miss tomorrow's DBMS class?",
@@ -132,6 +131,8 @@ export function StudentDashboard() {
                 <p className="text-sm text-muted-foreground">No recent document activity.</p>
               )}
             </section>
+
+            <NoticesCard />
           </div>
         </>
       )}

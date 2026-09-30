@@ -6,10 +6,7 @@ import { LoadingBlock, ErrorBlock, EmptyState } from "@/components/common/state-
 import { StatCard } from "@/components/common/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { useApiGet } from "@/lib/client/use-api";
-import type { listStaffDirectory, getStaffOverview } from "@/lib/services/employees";
-
-type Staff = Awaited<ReturnType<typeof listStaffDirectory>>[number];
-type Overview = Awaited<ReturnType<typeof getStaffOverview>>;
+import type { StaffDirectoryEntry as Staff, StaffOverview as Overview } from "@/lib/api-types";
 
 export default function EmployeesPage() {
   const { data, loading, error, reload } = useApiGet<{ staff: Staff[]; overview: Overview }>("/api/admin/employees");

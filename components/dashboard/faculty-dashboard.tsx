@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { BookOpen, Users, CalendarCheck, AlertTriangle, ArrowRight } from "lucide-react";
-import { getCurrentContext } from "@/lib/demo-session";
-import { getFacultyProfile, getMyCoursesWithStats } from "@/lib/services/faculty";
+import { backendGet } from "@/lib/server-context";
+import type { FacultyProfile, FacultyCourseWithStats } from "@/lib/api-types";
 import { StatCard } from "@/components/common/stat-card";
+import { NoticesCard } from "@/components/common/notices-card";
 import { HomeAiInput } from "./home-ai-input";
 
 const FACULTY_PROMPTS = ["Show my students below 75% attendance", "Which of my students have exams this week?"];
 
 export async function FacultyDashboard() {
-  const ctx = await getCurrentContext();
-  const [profile, courses] = await Promise.all([getFacultyProfile(ctx), getMyCoursesWithStats(ctx)]);
+  const [{ ctx, profile }, { courses }] = await Promise.all([
+    backendGet<{ ctx: { name: string }; profile: FacultyProfile | null }>("/api/profile"),
+    backendGet<{ courses: FacultyCourseWithStats[] }>("/api/faculty/courses"),
+  ]);
 
   const totalStudents = new Set(courses.map((c) => `${c.programmeId}-${c.semester}`)).size
     ? courses.reduce((sum, c) => sum + c.studentCount, 0)
@@ -61,6 +64,8 @@ export async function FacultyDashboard() {
           ))}
         </div>
       </section>
+
+      <NoticesCard />
     </div>
   );
 }

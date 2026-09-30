@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/client/session";
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { GraduationCap, Users, User, ShieldCheck, Briefcase, LogOut } from "lucide-react";
+import { GraduationCap, Users, User, ShieldCheck, Briefcase, LogOut, Settings, UserPen } from "lucide-react";
 import type { Role } from "@/lib/types";
 
 const ROLE_META: Record<Role, { label: string; icon: typeof User }> = {
@@ -23,6 +24,7 @@ const ROLE_META: Record<Role, { label: string; icon: typeof User }> = {
 };
 
 export function ProfileMenu() {
+  const router = useRouter();
   const { ctx, logout, loggingOut } = useSession();
   const meta = ROLE_META[ctx.role];
   const Icon = meta.icon;
@@ -61,6 +63,17 @@ export function ProfileMenu() {
             </div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        {ctx.permissions.includes("profile.update.request") && (
+          <DropdownMenuItem onClick={() => router.push("/profile/edit")} className="gap-2">
+            <UserPen className="size-4" />
+            Edit Profile
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem onClick={() => router.push("/account")} className="gap-2">
+          <Settings className="size-4" />
+          My Account
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => logout()} disabled={loggingOut} className="gap-2 text-destructive focus:text-destructive">
           <LogOut className="size-4" />

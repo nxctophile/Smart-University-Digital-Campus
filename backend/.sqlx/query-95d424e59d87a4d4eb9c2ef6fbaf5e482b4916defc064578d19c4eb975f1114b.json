@@ -1,0 +1,56 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select bl.id, bl.due_at, bl.fine_amount, b.title, s.roll_number, s.first_name, s.last_name\n        from book_loans bl\n        join books b on b.id = bl.book_id\n        join students s on s.id = bl.student_id\n        where bl.status = 'overdue'\n        order by bl.due_at asc\n        limit 100\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "due_at",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "fine_amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 3,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "roll_number",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "last_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "95d424e59d87a4d4eb9c2ef6fbaf5e482b4916defc064578d19c4eb975f1114b"
+}

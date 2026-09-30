@@ -1,0 +1,94 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from faculty where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "university_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "department_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "employee_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "first_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "last_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "phone",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "designation",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "source_system",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "source_table",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "source_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "last_synced_at",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "b03e41a38d9b841cfbb168e539f54c3becd346ca751a3d9b8639683bfbf7faf6"
+}

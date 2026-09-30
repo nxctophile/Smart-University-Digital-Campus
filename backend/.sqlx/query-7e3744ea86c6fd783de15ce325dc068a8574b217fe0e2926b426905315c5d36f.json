@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select amount, amount_paid, student_id from fees where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "amount",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 1,
+        "name": "amount_paid",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 2,
+        "name": "student_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "7e3744ea86c6fd783de15ce325dc068a8574b217fe0e2926b426905315c5d36f"
+}

@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select se.id as section_id, c.id as course_id, c.code as course_code, c.name as course_name,\n               c.programme_id, c.semester, se.academic_year\n        from sections se\n        join courses c on c.id = se.course_id\n        where se.faculty_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "section_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "course_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "course_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "course_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "programme_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "academic_year",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "3634d239e3a50e0665a30d0c4d57b68296a1bd8bb47b7e631cd06518c6789a3d"
+}

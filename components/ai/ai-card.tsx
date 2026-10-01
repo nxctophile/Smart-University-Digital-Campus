@@ -43,7 +43,7 @@ export function AiCardView({ card }: { card: AICard }) {
               </thead>
               <tbody>
                 {card.rows.map((row, i) => (
-                  <tr key={i} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={i} className="border-t border-border transition-colors hover:bg-brand-tint">
                     {card.columns.map((col) => (
                       <td key={col.key} className="whitespace-nowrap px-3 py-1.5">
                         {String(row[col.key] ?? "—")}

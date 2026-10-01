@@ -78,7 +78,7 @@ export default function FinancePage() {
               </thead>
               <tbody>
                 {fees.map((f) => (
-                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5">
                       {f.firstName} {f.lastName} <span className="font-mono text-xs text-muted-foreground">({f.rollNumber})</span>
                     </td>

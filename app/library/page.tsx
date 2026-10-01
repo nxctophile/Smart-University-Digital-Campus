@@ -153,7 +153,7 @@ export default function LibraryPage() {
                   </thead>
                   <tbody>
                     {data.loans.map((l) => (
-                      <tr key={l.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                      <tr key={l.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                         <td className="px-4 py-2.5">
                           <p className="font-medium">{l.title}</p>
                           <p className="text-xs text-muted-foreground">{l.author}</p>

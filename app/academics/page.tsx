@@ -44,7 +44,7 @@ export default function AcademicsPage() {
                 </thead>
                 <tbody>
                   {upcoming.map((e) => (
-                    <tr key={e.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                    <tr key={e.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                       <td className="px-4 py-2.5">
                         <p className="font-medium">{e.courseCode}</p>
                         <p className="text-xs text-muted-foreground">{e.courseName}</p>
@@ -67,7 +67,7 @@ export default function AcademicsPage() {
               <table className="w-full text-left text-sm">
                 <tbody>
                   {past.map((e) => (
-                    <tr key={e.id} className="border-t border-border transition-colors first:border-t-0 hover:bg-muted/30">
+                    <tr key={e.id} className="border-t border-border transition-colors first:border-t-0 hover:bg-brand-tint">
                       <td className="px-4 py-2.5 text-muted-foreground">{e.courseCode}</td>
                       <td className="px-4 py-2.5">{e.name}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{e.date}</td>
@@ -95,7 +95,7 @@ export default function AcademicsPage() {
               </thead>
               <tbody>
                 {results.map((r) => (
-                  <tr key={r.examId} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={r.examId} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5">
                       <p className="font-medium">{r.courseCode}</p>
                       <p className="text-xs text-muted-foreground">{r.courseName}</p>

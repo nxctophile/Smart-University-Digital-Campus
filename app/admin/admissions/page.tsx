@@ -177,7 +177,7 @@ function OnboardTab() {
               </thead>
               <tbody>
                 {admissions.map((a) => (
-                  <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={a.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2 font-mono text-xs">{a.rollNumber}</td>
                     <td className="px-4 py-2">
                       {a.firstName} {a.lastName}

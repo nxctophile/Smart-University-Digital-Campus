@@ -97,7 +97,7 @@ function PublishResultsTab() {
             </thead>
             <tbody>
               {exams.map((e) => (
-                <tr key={e.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                <tr key={e.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                   <td className="px-4 py-2.5">{e.name}</td>
                   <td className="px-4 py-2.5">
                     {e.courseCode} <span className="text-xs text-muted-foreground">{e.courseName}</span>

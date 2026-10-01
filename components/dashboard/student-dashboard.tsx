@@ -8,6 +8,7 @@ import { HomeAiInput } from "./home-ai-input";
 import { StatCard } from "@/components/common/stat-card";
 import { LoadingBlock, ErrorBlock } from "@/components/common/state-blocks";
 import { NoticesCard } from "@/components/common/notices-card";
+import { EventsCalendar } from "@/components/common/events-calendar";
 import type { StudentDashboard as DashboardData } from "@/lib/api-types";
 
 const STUDENT_PROMPTS = [
@@ -131,8 +132,11 @@ export function StudentDashboard() {
                 <p className="text-sm text-muted-foreground">No recent document activity.</p>
               )}
             </section>
+          </div>
 
+          <div className="grid gap-4 lg:grid-cols-2">
             <NoticesCard />
+            <EventsCalendar />
           </div>
         </>
       )}

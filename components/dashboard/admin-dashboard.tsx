@@ -7,6 +7,7 @@ import { HomeAiInput } from "./home-ai-input";
 import { DepartmentAttendanceChart } from "./department-attendance-chart";
 import { Badge } from "@/components/ui/badge";
 import { NoticesCard } from "@/components/common/notices-card";
+import { EventsCalendar } from "@/components/common/events-calendar";
 
 const ADMIN_PROMPTS = [
   "Show students with attendance below 75% who have exams this week",
@@ -92,7 +93,10 @@ export async function AdminDashboard() {
         </section>
       </div>
 
-      <NoticesCard />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <NoticesCard />
+        <EventsCalendar />
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { Landmark, ClipboardCheck, Award, UserCog, Briefcase, BookOpen, LifeBuoy, ArrowRight } from "lucide-react";
 import { getCurrentClientContext } from "@/lib/server-context";
 import { NoticesCard } from "@/components/common/notices-card";
+import { EventsCalendar } from "@/components/common/events-calendar";
 
 const QUICK_LINKS: { label: string; href: string; icon: LucideIcon; anyOf: string[]; description: string }[] = [
   { label: "Admissions", href: "/admin/admissions", icon: ClipboardCheck, anyOf: ["admission.application.view"], description: "Review applications & onboard students" },
@@ -58,7 +59,10 @@ export async function EmployeeDashboard() {
         )}
       </div>
 
-      <NoticesCard />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <NoticesCard />
+        <EventsCalendar />
+      </div>
     </div>
   );
 }

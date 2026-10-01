@@ -93,7 +93,7 @@ export default function AdminScholarshipsPage() {
             </thead>
             <tbody>
               {applications.map((a) => (
-                <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                <tr key={a.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                   <td className="px-4 py-2.5">
                     <p className="font-medium">
                       {a.firstName} {a.lastName}

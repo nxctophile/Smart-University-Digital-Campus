@@ -45,7 +45,7 @@ export default function EmployeesPage() {
               </thead>
               <tbody>
                 {staff.map((s) => (
-                  <tr key={`${s.kind}-${s.id}`} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={`${s.kind}-${s.id}`} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2 font-mono text-xs">{s.employeeCode}</td>
                     <td className="px-4 py-2">
                       {s.firstName} {s.lastName}

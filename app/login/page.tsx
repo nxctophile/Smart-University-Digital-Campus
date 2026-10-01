@@ -3,8 +3,10 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { GraduationCap, Loader2, LogIn } from "lucide-react";
+import { Loader2, LogIn, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoMark } from "@/components/brand/logo-mark";
+import { cn } from "@/lib/utils";
 
 type DemoUser = { id: number; name: string; email: string; role: string; roleNames: string[] };
 
@@ -16,11 +18,6 @@ const CATEGORY_LABEL: Record<string, string> = {
   employee: "Department staff",
 };
 const CATEGORY_ORDER = ["student", "parent", "faculty", "admin", "employee"];
-
-function personaLabel(user: DemoUser): string {
-  const roleText = user.roleNames.length ? user.roleNames.join(" + ") : CATEGORY_LABEL[user.role] ?? user.role;
-  return `${user.name} — ${roleText}`;
-}
 
 function LoginForm() {
   const router = useRouter();
@@ -71,15 +68,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 flex flex-col items-center gap-2 text-center">
-          <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <GraduationCap className="size-5.5" />
+    <div className="flex min-h-dvh items-center justify-center bg-muted/40 px-4 py-10">
+      <div className="w-full max-w-md">
+        <div className="mb-8 flex flex-col items-center gap-3 text-center">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
+            <LogoMark className="size-6" />
           </div>
           <div>
-            <p className="text-base font-semibold tracking-tight">Central Institute of Technology</p>
-            <p className="text-xs text-muted-foreground">Campus OS</p>
+            <p className="text-lg font-bold tracking-tight">Campus OS</p>
+            <p className="text-xs text-muted-foreground">Central Institute of Technology</p>
           </div>
         </div>
 
@@ -93,28 +90,49 @@ function LoginForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="persona" className="text-xs font-medium text-muted-foreground">
-              Log in as
-            </label>
+            <p className="text-xs font-medium text-muted-foreground">Log in as</p>
             {!users ? (
-              <div className="h-9 w-full animate-pulse rounded-md bg-muted" />
-            ) : (
-              <select
-                id="persona"
-                value={selected}
-                onChange={(e) => setSelected(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                {grouped.map((group) => (
-                  <optgroup key={group.category} label={CATEGORY_LABEL[group.category] ?? group.category}>
-                    {group.users.map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {personaLabel(u)}
-                      </option>
-                    ))}
-                  </optgroup>
+              <div className="space-y-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-14 w-full animate-pulse rounded-lg bg-secondary" />
                 ))}
-              </select>
+              </div>
+            ) : (
+              <div className="max-h-80 space-y-4 overflow-y-auto pr-1">
+                {grouped.map((group) => (
+                  <div key={group.category} className="space-y-1.5">
+                    <p className="px-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                      {CATEGORY_LABEL[group.category] ?? group.category}
+                    </p>
+                    <div className="space-y-1.5">
+                      {group.users.map((u) => {
+                        const active = selected === String(u.id);
+                        return (
+                          <button
+                            key={u.id}
+                            type="button"
+                            onClick={() => setSelected(String(u.id))}
+                            className={cn(
+                              "flex w-full items-center justify-between gap-3 rounded-lg border p-3 text-left text-sm transition-colors",
+                              active
+                                ? "border-primary bg-brand-tint"
+                                : "border-border bg-card hover:border-primary/40 hover:bg-brand-tint/60",
+                            )}
+                          >
+                            <span className="min-w-0">
+                              <span className="block truncate font-medium">{u.name}</span>
+                              <span className="block truncate text-xs text-muted-foreground">
+                                {u.roleNames.length ? u.roleNames.join(" + ") : CATEGORY_LABEL[u.role] ?? u.role}
+                              </span>
+                            </span>
+                            {active && <Check className="size-4 shrink-0 text-primary" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 

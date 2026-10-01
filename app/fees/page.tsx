@@ -88,7 +88,7 @@ function FeeBalanceTab() {
         order_id: order.orderId,
         name: "Central Institute of Technology",
         description: `${fee.feeType} fee - Semester ${fee.semester}`,
-        theme: { color: "#14213D" },
+        theme: { color: "#C9432C" },
         handler: async (response) => {
           try {
             await apiPost("/api/payments/verify", {
@@ -163,7 +163,7 @@ function FeeBalanceTab() {
               </thead>
               <tbody>
                 {data.items.map((f) => (
-                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5 capitalize">{f.feeType}</td>
                     <td className="px-4 py-2.5">{f.semester}</td>
                     <td className="px-4 py-2.5">₹{f.amount.toLocaleString("en-IN")}</td>

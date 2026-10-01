@@ -67,7 +67,7 @@ export default function AdminLibraryPage() {
               </thead>
               <tbody>
                 {overdueData.loans.map((l) => (
-                  <tr key={l.id} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={l.id} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5">{l.title}</td>
                     <td className="px-4 py-2.5">
                       {l.firstName} {l.lastName} <span className="font-mono text-xs text-muted-foreground">({l.rollNumber})</span>

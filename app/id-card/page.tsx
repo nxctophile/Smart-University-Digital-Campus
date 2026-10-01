@@ -27,9 +27,9 @@ function PseudoQr({ seed, size = 10 }: { seed: string; size?: number }) {
   }
   const cell = 100 / size;
   return (
-    <svg viewBox="0 0 100 100" className="size-20 rounded bg-white p-1">
+    <svg viewBox="0 0 100 100" className="size-20 rounded bg-white p-1 text-foreground">
       {cells.map((filled, i) =>
-        filled ? <rect key={i} x={(i % size) * cell} y={Math.floor(i / size) * cell} width={cell} height={cell} fill="#0f172a" /> : null,
+        filled ? <rect key={i} x={(i % size) * cell} y={Math.floor(i / size) * cell} width={cell} height={cell} fill="currentColor" /> : null,
       )}
     </svg>
   );
@@ -39,10 +39,10 @@ function Barcode({ seed }: { seed: string }) {
   const hash = hashString(seed);
   const bars = Array.from({ length: 28 }, (_, i) => 1 + (((hash >> (i % 20)) ^ i) % 3));
   return (
-    <svg viewBox="0 0 140 28" className="h-7 w-full">
+    <svg viewBox="0 0 140 28" className="h-7 w-full text-foreground">
       {bars.reduce<{ x: number; els: React.ReactNode[] }>(
         (acc, w, i) => {
-          acc.els.push(<rect key={i} x={acc.x} y={0} width={w} height={28} fill={i % 2 === 0 ? "#0f172a" : "transparent"} />);
+          acc.els.push(<rect key={i} x={acc.x} y={0} width={w} height={28} fill={i % 2 === 0 ? "currentColor" : "transparent"} />);
           acc.x += w;
           return acc;
         },
@@ -121,16 +121,17 @@ export default function IdCardPage() {
             >
               {/* Front */}
               <div className="absolute inset-0 overflow-hidden rounded-2xl shadow-xl [backface-visibility:hidden]">
-                <div className="h-full w-full bg-gradient-to-br from-[#14213D] via-[#1c2f52] to-[#2a4066] p-4 text-white">
+                <div className="relative h-full w-full bg-gradient-to-br from-sidebar via-sidebar-accent to-sidebar p-4 text-sidebar-foreground">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-brand" />
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-white/70">Central Institute of Technology</p>
-                      <p className="text-xs font-medium text-white/90">Student Smart Card</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/70">Central Institute of Technology</p>
+                      <p className="text-xs font-medium text-sidebar-foreground/90">Student Smart Card</p>
                     </div>
-                    <CreditCard className="size-5 text-white/60" />
+                    <CreditCard className="size-5 text-brand" />
                   </div>
                   <div className="mt-3 flex gap-3">
-                    <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/20">
+                    <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-sidebar-foreground/10 ring-1 ring-sidebar-foreground/20">
                       {photo ? (
                         // eslint-disable-next-line @next/next/no-img-element -- dynamic user-uploaded file served by the backend, not a static asset
                         <img src={`/api/locker/${photo.id}/file`} alt="" className="size-full object-cover" />
@@ -140,26 +141,26 @@ export default function IdCardPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{profile.firstName} {profile.lastName}</p>
-                      <p className="text-[11px] text-white/70">{profile.rollNumber}</p>
-                      <p className="mt-1 truncate text-[11px] text-white/80">{profile.programme}</p>
-                      <p className="text-[11px] text-white/60">{profile.department} · Sem {profile.currentSemester}</p>
+                      <p className="text-[11px] text-sidebar-foreground/70">{profile.rollNumber}</p>
+                      <p className="mt-1 truncate text-[11px] text-sidebar-foreground/80">{profile.programme}</p>
+                      <p className="text-[11px] text-sidebar-foreground/60">{profile.department} · Sem {profile.currentSemester}</p>
                     </div>
                   </div>
-                  <div className="mt-3 flex items-end justify-between border-t border-white/15 pt-2">
+                  <div className="mt-3 flex items-end justify-between border-t border-sidebar-foreground/15 pt-2">
                     <div>
-                      <p className="text-[9px] uppercase tracking-wide text-white/50">Valid thru</p>
+                      <p className="text-[9px] uppercase tracking-wide text-sidebar-foreground/50">Valid thru</p>
                       <p className="text-xs font-medium">{validThru}</p>
                     </div>
-                    <div className="h-5 w-20 rounded bg-gradient-to-r from-white/20 via-white/40 to-white/20" />
+                    <div className="h-5 w-20 rounded bg-gradient-to-r from-sidebar-foreground/10 via-sidebar-foreground/30 to-sidebar-foreground/10" />
                   </div>
                 </div>
               </div>
 
               {/* Back */}
               <div className="absolute inset-0 overflow-hidden rounded-2xl shadow-xl [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                <div className="flex h-full w-full flex-col justify-between bg-[#14213D] p-4 text-white">
+                <div className="flex h-full w-full flex-col justify-between bg-sidebar p-4 text-sidebar-foreground">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="text-[10px] leading-relaxed text-white/70">
+                    <p className="text-[10px] leading-relaxed text-sidebar-foreground/70">
                       This card is the property of Central Institute of Technology. If found, please return to the
                       Admission Cell. Misuse of this card is a disciplinary offence.
                     </p>
@@ -167,7 +168,7 @@ export default function IdCardPage() {
                   </div>
                   <div>
                     <Barcode seed={profile.rollNumber} />
-                    <p className="mt-1 text-center text-[10px] tracking-widest text-white/60">{profile.rollNumber}</p>
+                    <p className="mt-1 text-center text-[10px] tracking-widest text-sidebar-foreground/60">{profile.rollNumber}</p>
                   </div>
                 </div>
               </div>

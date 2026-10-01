@@ -73,7 +73,7 @@ export default function AttendancePage() {
               </thead>
               <tbody>
                 {data.courses.map((c) => (
-                  <tr key={c.courseId} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={c.courseId} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5">
                       <p className="font-medium">{c.courseCode}</p>
                       <p className="text-xs text-muted-foreground">{c.courseName}</p>

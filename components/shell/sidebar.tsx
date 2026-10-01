@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "@/lib/client/session";
 import { getNavGroups } from "./nav-config";
 import { cn } from "@/lib/utils";
-import { GraduationCap } from "lucide-react";
+import { LogoMark } from "@/components/brand/logo-mark";
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { ctx } = useSession();
@@ -15,8 +15,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full w-60 flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-2.5 px-5 py-5">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
-          <GraduationCap className="size-4.5" />
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
+          <LogoMark className="size-4" />
         </div>
         <div className="leading-tight">
           <p className="text-sm font-semibold tracking-tight">Central Institute</p>

@@ -194,7 +194,7 @@ export default function DataImportPage() {
               </thead>
               <tbody>
                 {mapping.map((m) => (
-                  <tr key={m.column} className="border-t border-border transition-colors hover:bg-muted/30">
+                  <tr key={m.column} className="border-t border-border transition-colors hover:bg-brand-tint">
                     <td className="px-4 py-2.5 font-mono text-xs">{m.column}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">{result.sampleRows[0]?.[m.column] ?? "—"}</td>
                     <td className="px-4 py-2.5">

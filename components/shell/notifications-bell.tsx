@@ -32,7 +32,7 @@ export function NotificationsBell() {
         <div className="border-b border-border px-4 py-3">
           <p className="text-sm font-medium">Notifications</p>
         </div>
-        <ScrollArea className="max-h-80">
+        <ScrollArea className="max-h-80 min-h-0">
           <div className="divide-y divide-border">
             {items === null && <div className="px-4 py-6 text-center text-sm text-muted-foreground">Loading...</div>}
             {items?.length === 0 && <div className="px-4 py-6 text-center text-sm text-muted-foreground">No notifications</div>}

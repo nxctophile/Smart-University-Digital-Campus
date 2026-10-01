@@ -4,6 +4,7 @@ import { backendGet } from "@/lib/server-context";
 import type { FacultyProfile, FacultyCourseWithStats } from "@/lib/api-types";
 import { StatCard } from "@/components/common/stat-card";
 import { NoticesCard } from "@/components/common/notices-card";
+import { EventsCalendar } from "@/components/common/events-calendar";
 import { HomeAiInput } from "./home-ai-input";
 
 const FACULTY_PROMPTS = ["Show my students below 75% attendance", "Which of my students have exams this week?"];
@@ -65,7 +66,10 @@ export async function FacultyDashboard() {
         </div>
       </section>
 
-      <NoticesCard />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <NoticesCard />
+        <EventsCalendar />
+      </div>
     </div>
   );
 }
